@@ -1,0 +1,6 @@
+{
+  "name": "AgriAI - Agriculture ML Dashboard",
+  "description": "AI for Sustainable Agriculture: Predict farmer income with regression and discover farmer segments with ML clustering.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
