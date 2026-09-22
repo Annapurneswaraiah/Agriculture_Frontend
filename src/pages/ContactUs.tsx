@@ -267,7 +267,7 @@ export const ContactUs: React.FC<ContactUsProps> = ({
                     }
                     className="flex-1 py-3 px-4 bg-[#00FF88] hover:bg-[#00FF88]/90 text-[#0B0F14] text-xs font-black rounded-xl transition-all flex items-center justify-center space-x-2 shadow-sm shadow-[#00FF88]/20 cursor-pointer"
                   >
-                    <span>Test In {generatedAdvisory.recommendedTab === 'farmer-clustering' ? 'Farmer Clustering' : 'Income Prediction'}</span>
+                    <span>Test In {generatedAdvisory.recommendedTab === 'farmer-clustering' ? 'Farmer Classification' : 'Income Prediction'}</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 )}
@@ -393,7 +393,7 @@ export const ContactUs: React.FC<ContactUsProps> = ({
             </h3>
 
             <p className="text-[#94A3B8] leading-relaxed text-[11px]">
-              Our system applies ML regression curves and K-Means clustering centroid weights to analyze your specific question:
+              Our system applies verified agricultural economic models and regional farmer peer group benchmarks to analyze your specific question:
             </p>
 
             <div className="space-y-2.5 pt-1">

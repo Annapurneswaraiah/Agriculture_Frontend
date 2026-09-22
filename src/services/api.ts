@@ -24,16 +24,16 @@ export function setRenderBaseUrl(url: string): void {
  * when Render is spinning up (free tier cold start can take 50s) or if browser blocks CORS.
  */
 function estimateRegressionFallback(input: RegressionInput): number {
-  // Base intercept ~ ₦120,000
+  // Base intercept ~ ₹120,000
   let income = 120000;
-  // Land factor (major driver): ~₦45,000 per hectare
+  // Land factor (major driver): ~₹45,000 per hectare
   income += (input.land_owned_hectares || 0) * 45000;
-  // Fertilizer factor: ~₦650 per kg/ha
+  // Fertilizer factor: ~₹650 per kg/ha
   income += (input.fertilizer_used_kg_per_hectare || 0) * 650;
-  // Livestock: goats (~₦12,000 each annual return), sheep (~₦15,000 each)
+  // Livestock: goats (~₹12,000 each annual return), sheep (~₹15,000 each)
   income += (input.goats_number || 0) * 12000;
   income += (input.sheep_number || 0) * 15000;
-  // Weekly production: eggs (52 wks * ₦60/egg margin), milk (52 wks * ₦350/L margin)
+  // Weekly production: eggs (52 wks * ₹60/egg margin), milk (52 wks * ₹350/L margin)
   income += (input.livestock_eggs_per_week || 0) * 52 * 60;
   income += (input.livestock_milk_litres_per_week || 0) * 52 * 350;
   // Household head age experience curve
@@ -244,7 +244,7 @@ export async function predictFarmerCluster(input: ClusteringInput): Promise<{
       savePredictionToHistory({
         id: 'hist_' + Date.now(),
         type: 'clustering',
-        title: 'Farmer Clustering',
+        title: 'Farmer Classification',
         dateFormatted: formatDate(Date.now()),
         timestamp: Date.now(),
         status: 'Success',
@@ -286,7 +286,7 @@ export async function predictFarmerCluster(input: ClusteringInput): Promise<{
       savePredictionToHistory({
         id: 'hist_' + Date.now(),
         type: 'clustering',
-        title: 'Farmer Clustering',
+        title: 'Farmer Classification',
         dateFormatted: formatDate(Date.now()),
         timestamp: Date.now(),
         status: 'Success',
@@ -317,7 +317,7 @@ export async function predictFarmerCluster(input: ClusteringInput): Promise<{
   savePredictionToHistory({
     id: 'hist_' + Date.now(),
     type: 'clustering',
-    title: 'Farmer Clustering',
+    title: 'Farmer Classification',
     dateFormatted: formatDate(Date.now()),
     timestamp: Date.now(),
     status: 'Success',
@@ -392,7 +392,7 @@ const INITIAL_HISTORY: PredictionHistoryItem[] = [
   {
     id: 'hist_seed_2',
     type: 'clustering',
-    title: 'Farmer Clustering',
+    title: 'Farmer Classification',
     dateFormatted: 'Sep 17, 2026 09:15 AM',
     timestamp: Date.now() - 1000 * 60 * 105,
     status: 'Success',
@@ -435,7 +435,7 @@ const INITIAL_HISTORY: PredictionHistoryItem[] = [
   {
     id: 'hist_seed_4',
     type: 'clustering',
-    title: 'Farmer Clustering',
+    title: 'Farmer Classification',
     dateFormatted: 'Sep 15, 2026 11:20 AM',
     timestamp: Date.now() - 1000 * 60 * 60 * 48,
     status: 'Success',
@@ -482,3 +482,21 @@ export function clearPredictionHistory(): void {
   if (typeof window === 'undefined') return;
   localStorage.removeItem(STORAGE_KEY_HISTORY);
 }
+
+export async function checkApiHealth(): Promise<{ isOnline: boolean; latencyMs: number }> {
+  const startTime = Date.now();
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 4000);
+    await fetch(`${getRenderBaseUrl()}/docs`, {
+      method: 'GET',
+      signal: controller.signal,
+      mode: 'no-cors',
+    });
+    clearTimeout(timeoutId);
+    return { isOnline: true, latencyMs: Date.now() - startTime };
+  } catch {
+    return { isOnline: false, latencyMs: 0 };
+  }
+}
+

@@ -1,473 +1,277 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
-  TrendingUp,
-  Users,
-  PieChart,
-  ArrowRight,
+  Wheat,
   Sprout,
-  ShieldCheck,
-  CheckCircle2,
-  Cpu,
-  BarChart3,
-  Layers,
-  Sparkles,
-  Zap,
-  Leaf,
-  Tractor,
   Droplets,
+  Layers,
+  HeartHandshake,
+  DollarSign,
+  TrendingUp,
+  Globe2,
+  Users,
+  CheckCircle,
   Sun,
-  Activity,
-  MapPin,
-  Eye,
-  Compass
+  Calendar,
+  Check,
+  ArrowRight,
+  Sparkles,
 } from 'lucide-react';
-import { motion } from 'motion/react';
-import { BrandLogo } from '../components/BrandLogo';
-import { UserProfile } from '../types';
-import { CLUSTER_SEGMENTS } from '../utils/formatters';
+import { HeroSection } from '../components/HeroSection';
+import { SectionHeading } from '../components/SectionHeading';
+import { FarmingSystemCard } from '../components/FarmingSystemCard';
+import { CTASection } from '../components/CTASection';
 
-const PLOUGHING_FIELD_SCENES = [
-  {
-    id: 'deep-furrow',
-    label: 'Deep Furrow Soil Ploughing',
-    stage: 'Primary Tillage Phase',
-    operator: 'Agro-Tractor & Multi-Bottom Moldboard Plough',
-    depth: '22 cm Furrow Inversion',
-    soilAeration: 'Optimal Subsoil Porosity',
-    moistureRetention: '64% In-Soil Moisture',
-    acreageRate: '2.8 Acres / Hour',
-    imgUrl: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=800&q=80',
-    description: 'Farmers and heavy-duty agricultural ploughs turning over topsoil to bury weed residue, aerate hardened subsoil, and prepare fertile furrow channels before seasonal planting.'
-  },
-  {
-    id: 'contour-ploughing',
-    label: 'Terraced Furrow Contour Ploughing',
-    stage: 'Erosion Prevention Tillage',
-    operator: 'Pair-Draught Precision Beam Plough',
-    depth: '16 cm Contour Furrow',
-    soilAeration: 'Fine Root-Zone Loosening',
-    moistureRetention: '69% Terrace Water Hold',
-    acreageRate: '1.2 Acres / Hour',
-    imgUrl: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80',
-    description: 'Skilled agricultural producers guiding precision contour ploughs across terraced fields, carving rhythmic ridges that trap monsoon precipitation and protect topsoil minerals.'
-  },
-  {
-    id: 'disc-harrowing',
-    label: 'Secondary Disc Plough & Seedbed Tilth',
-    stage: 'Pre-Sowing Pulverization',
-    operator: 'Tractor-Mounted Offset Disc Harrow',
-    depth: '12 cm Clod Pulverization',
-    soilAeration: 'Fine Granular Tilth',
-    moistureRetention: '58% Seedbed Moisture',
-    acreageRate: '3.6 Acres / Hour',
-    imgUrl: 'https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=800&q=80',
-    description: 'Farmers operating high-speed rotary disc harrows to chop hard earth clods into a fine, uniform seedbed ready for precision mechanical drilling and high germination rates.'
-  }
-];
+export const Home: React.FC = () => {
+  const navigate = useNavigate();
 
-interface HomeProps {
-  onNavigate: (tab: string) => void;
-  user: UserProfile | null;
-  onOpenLogin: (initialMode?: 'signin' | 'signup') => void;
-}
-
-export const Home: React.FC<HomeProps> = ({ onNavigate, user, onOpenLogin }) => {
-  const [activePloughIndex, setActivePloughIndex] = useState(0);
-  const currentPloughScene = PLOUGHING_FIELD_SCENES[activePloughIndex];
+  const handleExploreClick = () => {
+    const el = document.getElementById('farming-systems');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 14 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: 'easeOut' }}
-      className="space-y-12 max-w-7xl mx-auto pb-12"
-    >
-      {/* Hero Section */}
-      <div className="relative overflow-hidden rounded-3xl p-6 sm:p-10 lg:p-14 glass-card border border-white/10 shadow-2xl">
-        {/* Subtle Ambient Radial Lighting in Hero */}
-        <div className="absolute top-0 right-1/4 w-96 h-96 rounded-full bg-[#00FF88]/10 blur-[100px] pointer-events-none" />
-        <div className="absolute -bottom-20 -left-20 w-80 h-80 rounded-full bg-[#06B6D4]/10 blur-[90px] pointer-events-none" />
+    <div className="min-h-screen bg-transparent text-[#F1F5F9]">
+      {/* =========================================================================
+          SECTION A: HERO BANNER
+          ========================================================================= */}
+      <HeroSection
+        badgeText="Technology • Agriculture • Farmer Empowerment"
+        title="Empowering Farmers Through Smarter Agriculture"
+        subtitle="Discover how agricultural knowledge, farming insights, and modern technology can help build a more informed and sustainable farming future."
+        backgroundImage="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1800&q=80"
+        buttons={[
+          {
+            label: 'Explore Agriculture',
+            onClick: handleExploreClick,
+            variant: 'primary',
+          },
+          {
+            label: 'Learn About Us',
+            onClick: () => navigate('/about'),
+            variant: 'secondary',
+          },
+        ]}
+      />
 
-        <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-14">
-          {/* Left Hero Column */}
-          <div className="flex-1 space-y-6 text-center lg:text-left">
-            {/* AgriAI Brand Logo & Tagline Card */}
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3">
-              <div className="p-2 sm:p-2.5 rounded-2xl bg-white/[0.05] border border-white/10 backdrop-blur-md inline-flex items-center shadow-lg">
-                <BrandLogo
-                  size="md"
-                  showTagline={true}
-                  variant="dark"
-                  onClick={() => onNavigate('home')}
-                />
-              </div>
+      {/* =========================================================================
+          SECTION: FARMING SYSTEMS
+          ========================================================================= */}
+      <section id="farming-systems" className="py-20 sm:py-28 bg-[#0D1811] border-y border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeading
+            badge="Farm Typologies"
+            title="Different Ways of Farming"
+            description="Farmers worldwide adapt their methods to their local terrain, available capital, land access, and family goals. These diverse systems shape how agriculture operates globally."
+            dark={true}
+          />
 
-              <div className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-full bg-[#00FF88]/10 border border-[#00FF88]/30 text-[#00FF88] text-xs font-extrabold uppercase tracking-widest shadow-sm shadow-[#00FF88]/20">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>AI FOR SUSTAINABLE AGRICULTURE</span>
-              </div>
-            </div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* 1. Subsistence Farming */}
+            <FarmingSystemCard
+              title="Subsistence Farming"
+              category="Family & Household Food Security"
+              description="In subsistence systems, agricultural production is primarily organized to meet the direct consumption needs of the farming household, with reliance on family labor and localized seed varieties."
+              image="https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&w=800&q=80"
+              icon={Sprout}
+              highlights={[
+                'Focus on household food security and staple crops',
+                'Reliance on seasonal rains and traditional farming tools',
+                'Surplus crops occasionally shared or bartered locally',
+                'High resilience through diverse multi-crop garden plots',
+              ]}
+            />
 
-            {/* Bold Headline */}
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-[#F1F5F9] leading-[1.1] tracking-tight">
-              SMART FARMING <br className="hidden sm:inline" />
-              <span className="gradient-text-flow">BRIGHTER TOMORROW</span>
-            </h1>
+            {/* 2. Mixed Farming */}
+            <FarmingSystemCard
+              title="Mixed Farming"
+              category="Integrated Crops & Livestock"
+              description="Mixed farming creates a mutually beneficial cycle where crop residues feed farm animals, and animal manure enriches the soil, diversifying household nutrition and smoothing seasonal income."
+              image="https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=800&q=80"
+              icon={HeartHandshake}
+              highlights={[
+                'Synergistic integration of crop fields and animal pens',
+                'Livestock provides dairy, eggs, and organic compost',
+                'Risk reduction through multiple agricultural revenue sources',
+                'Efficient biological recycling of farm biomass and forage',
+              ]}
+            />
 
-            {/* Subtext */}
-            <p className="text-sm sm:text-base text-[#94A3B8] max-w-xl leading-relaxed mx-auto lg:mx-0">
-              Empowering 20,000+ agricultural producers and rural households with predictive income estimation and unsupervised machine learning clustering engines.
-            </p>
+            {/* 3. Commercial Farming */}
+            <FarmingSystemCard
+              title="Commercial Farming"
+              category="Market-Scale Production"
+              description="Commercial agriculture organizes production for regional, national, and international markets, utilizing specialized equipment, structured input management, and commercial distribution channels."
+              image="https://images.unsplash.com/photo-1595855759920-86582396756a?auto=format&fit=crop&w=800&q=80"
+              icon={TrendingUp}
+              highlights={[
+                'Scale-oriented crop production aimed at formal markets',
+                'Higher utilization of farm machinery and targeted inputs',
+                'Emphasis on crop uniformity, post-harvest logistics, and quality',
+                'Enterprise-level management of cash flow and operating costs',
+              ]}
+            />
+          </div>
+        </div>
+      </section>
 
-            {/* Twin CTAs */}
-            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
-              <button
-                id="hero-explore-dashboard-btn"
-                onClick={() => onNavigate('dashboard')}
-                className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-[#00FF88] hover:bg-[#00FF88]/90 text-[#0B0F14] text-sm font-black transition-all duration-200 shadow-md shadow-[#00FF88]/25 hover:shadow-lg hover:shadow-[#00FF88]/40 hover:-translate-y-0.5 flex items-center justify-center space-x-2 cursor-pointer"
+      {/* =========================================================================
+          SECTION D: THE FARMER'S JOURNEY
+          ========================================================================= */}
+      <section className="py-20 sm:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <SectionHeading
+          badge="Seasonal Lifecycle"
+          title="Every Farm Has a Story"
+          description="From the first turning of the soil to the final post-harvest market distribution, every agricultural season follows an interconnected series of dedicated steps."
+          dark={true}
+        />
+
+        <div className="relative">
+          {/* Subtle line connector for large screens */}
+          <div className="hidden lg:block absolute top-1/2 left-8 right-8 h-0.5 bg-white/15 -translate-y-12 z-0" />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 relative z-10">
+            {[
+              {
+                step: '01',
+                title: 'Preparing the Land',
+                desc: 'Clearing weeds, aerating the soil, testing moisture levels, and shaping beds or furrows.',
+                icon: Layers,
+              },
+              {
+                step: '02',
+                title: 'Selecting Seeds & Crops',
+                desc: 'Choosing resilient crop varieties adapted to regional rainfall, soil type, and growing season.',
+                icon: Sprout,
+              },
+              {
+                step: '03',
+                title: 'Managing Fertilizer & Water',
+                desc: 'Applying balanced organic and mineral nutrients while conserving and channeling water to root zones.',
+                icon: Droplets,
+              },
+              {
+                step: '04',
+                title: 'Caring for Crops & Animals',
+                desc: 'Monitoring for pests, disease outbreaks, weed competition, and providing animal health care.',
+                icon: Sun,
+              },
+              {
+                step: '05',
+                title: 'Harvesting Products',
+                desc: 'Gathering mature grains, fruits, forage, and livestock goods at the optimal moisture and peak quality.',
+                icon: Wheat,
+              },
+              {
+                step: '06',
+                title: 'Managing Resources & Income',
+                desc: 'Balancing family consumption reserves, seed storage, and sales to support household livelihoods.',
+                icon: DollarSign,
+              },
+            ].map((item, idx) => (
+              <div
+                key={idx}
+                className="agri-card p-6 flex flex-col justify-between bg-[#111F17] text-center group border border-white/10 hover:border-[#00FF88]/50 rounded-2xl shadow-xl transition-all"
               >
-                <span>Explore Dashboard</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
+                <div>
+                  <div className="w-12 h-12 rounded-2xl bg-[#00FF88]/15 border border-[#00FF88]/30 text-[#00FF88] mx-auto flex items-center justify-center font-black text-sm mb-4 shadow-sm group-hover:bg-[#00FF88] group-hover:text-[#0A120D] transition-colors">
+                    <item.icon className="w-5 h-5" />
+                  </div>
 
-              <button
-                id="hero-discover-models-btn"
-                onClick={() => onNavigate('income-prediction')}
-                className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-[#111827] hover:bg-white/10 text-[#F1F5F9] border border-white/15 text-sm font-bold transition-all duration-200 hover:-translate-y-0.5 flex items-center justify-center space-x-2 cursor-pointer"
-              >
-                <span>Discover Our Models</span>
-                <Cpu className="w-4 h-4 text-[#06B6D4]" />
-              </button>
-            </div>
-          </div>
+                  <span className="text-[11px] font-extrabold text-[#00FF88] uppercase tracking-widest block mb-1">
+                    Step {item.step}
+                  </span>
 
-          {/* Right Hero Column: Farmers Ploughing Working in Field Visual */}
-          <div className="shrink-0 flex items-center justify-center relative">
-            {/* Outer Glowing Gradient Ring */}
-            <div className="p-2 sm:p-3 rounded-full bg-gradient-to-tr from-[#00FF88] via-[#06B6D4] to-[#8B5CF6] shadow-2xl shadow-[#00FF88]/20 ring-4 ring-white/10">
-              <div className="w-52 h-52 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 rounded-full overflow-hidden bg-[#0B0F14] relative">
-                <img
-                  src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=800&q=80"
-                  alt="Farmers ploughing agricultural field with modern tractor"
-                  referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-700"
-                />
-                {/* Subtle dark overlay gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F14]/60 via-transparent to-transparent pointer-events-none" />
-              </div>
-            </div>
+                  <h3 className="text-base font-bold text-white mb-2 group-hover:text-[#00FF88] transition-colors">
+                    {item.title}
+                  </h3>
 
-            {/* Floating Ploughing Status Badge */}
-            <motion.div
-              animate={{ y: [-4, 4, -4] }}
-              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-              className="absolute -bottom-3 -left-3 sm:bottom-2 sm:-left-4 p-3 rounded-2xl glass-card border border-[#00FF88]/40 shadow-xl flex items-center space-x-2 text-xs font-bold text-[#00FF88]"
-            >
-              <div className="p-1.5 rounded-lg bg-[#00FF88]/20">
-                <Tractor className="w-4 h-4 text-[#00FF88]" />
-              </div>
-              <div className="flex flex-col text-left">
-                <span className="text-[10px] text-[#94A3B8] font-medium leading-none">Field Operation</span>
-                <span className="leading-tight font-extrabold text-[#00FF88]">Farmers Ploughing Field</span>
-              </div>
-            </motion.div>
-
-            <motion.div
-              animate={{ y: [4, -4, 4] }}
-              transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
-              className="absolute -top-3 -right-3 sm:top-2 sm:-right-4 p-3 rounded-2xl glass-card border border-[#06B6D4]/40 shadow-xl flex items-center space-x-2 text-xs font-bold text-[#06B6D4]"
-            >
-              <div className="p-1.5 rounded-lg bg-[#06B6D4]/20">
-                <Cpu className="w-4 h-4 text-[#06B6D4]" />
-              </div>
-              <span>FastAPI Inference</span>
-            </motion.div>
-          </div>
-        </div>
-
-        {/* Metrics Strip */}
-        <div className="relative z-10 mt-12 pt-8 border-t border-white/10 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 text-center">
-          <div className="p-3 rounded-2xl bg-white/[0.03] border border-white/5">
-            <div className="text-2xl sm:text-3xl font-black text-[#F1F5F9]">20K+</div>
-            <p className="text-xs text-[#94A3B8] font-medium mt-1">Farmer Records</p>
-          </div>
-          <div className="p-3 rounded-2xl bg-white/[0.03] border border-white/5">
-            <div className="text-2xl sm:text-3xl font-black text-[#00FF88]">2</div>
-            <p className="text-xs text-[#94A3B8] font-medium mt-1">ML Models (Regression &amp; KMeans)</p>
-          </div>
-          <div className="p-3 rounded-2xl bg-white/[0.03] border border-white/5">
-            <div className="text-2xl sm:text-3xl font-black text-[#06B6D4]">5</div>
-            <p className="text-xs text-[#94A3B8] font-medium mt-1">Farmer Segments</p>
-          </div>
-          <div className="p-3 rounded-2xl bg-white/[0.03] border border-white/5">
-            <div className="text-2xl sm:text-3xl font-black text-[#8B5CF6]">10+</div>
-            <p className="text-xs text-[#94A3B8] font-medium mt-1">Key Insights &amp; Features</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Dedicated Farmers Ploughing & Working Field Operations Section */}
-      <div className="glass-card rounded-3xl p-6 sm:p-8 lg:p-10 border border-white/10 shadow-2xl relative overflow-hidden">
-        {/* Ambient background glow */}
-        <div className="absolute top-0 right-10 w-80 h-80 rounded-full bg-[#00FF88]/10 blur-[100px] pointer-events-none" />
-        <div className="absolute bottom-0 left-10 w-80 h-80 rounded-full bg-[#06B6D4]/10 blur-[100px] pointer-events-none" />
-
-        <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-10">
-          {/* Left Column: Ploughing Operations & Telemetry */}
-          <div className="flex-1 space-y-5 w-full">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#00FF88]/15 border border-[#00FF88]/30 text-[#00FF88] text-xs font-black uppercase tracking-wider shadow-xs">
-                <Tractor className="w-3.5 h-3.5" />
-                <span>Active Field Ploughing &bull; Soil Preparation</span>
-              </span>
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-[#94A3B8]">
-                <MapPin className="w-3.5 h-3.5 text-[#06B6D4]" />
-                <span>Sector 3 &bull; Primary Furrow Grid</span>
-              </span>
-            </div>
-
-            <div>
-              <h2 className="text-2xl sm:text-3xl font-black text-[#F1F5F9] tracking-tight">
-                Farmers Ploughing &amp; Soil Cultivation in the Field
-              </h2>
-              <p className="text-xs sm:text-sm text-[#94A3B8] mt-2 max-w-2xl leading-relaxed">
-                {currentPloughScene.description} Deep tilling and furrow aeration directly calibrate the agricultural yield potential fed into AgriAI&apos;s machine learning prediction pipeline.
-              </p>
-            </div>
-
-            {/* Interactive Ploughing Scene Selectors */}
-            <div className="flex flex-wrap gap-2 pt-1">
-              {PLOUGHING_FIELD_SCENES.map((scene, idx) => (
-                <button
-                  key={scene.id}
-                  onClick={() => setActivePloughIndex(idx)}
-                  className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center space-x-2 ${
-                    activePloughIndex === idx
-                      ? 'bg-[#00FF88] text-[#0B0F14] shadow-sm shadow-[#00FF88]/30 font-black'
-                      : 'bg-[#111827] text-[#94A3B8] hover:text-[#F1F5F9] border border-white/10'
-                  }`}
-                >
-                  <Eye className="w-3.5 h-3.5" />
-                  <span>{scene.label}</span>
-                </button>
-              ))}
-            </div>
-
-            {/* Ploughing Field Telemetry Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
-              <div className="p-3.5 rounded-2xl bg-[#0B0F14]/70 border border-white/10">
-                <div className="flex items-center space-x-1.5 text-xs text-[#94A3B8] font-medium">
-                  <Tractor className="w-3.5 h-3.5 text-[#00FF88]" />
-                  <span>Tillage Depth</span>
+                  <p className="text-xs text-[#94A3B8] leading-relaxed">
+                    {item.desc}
+                  </p>
                 </div>
-                <div className="text-lg font-black text-[#F1F5F9] mt-1">{currentPloughScene.depth}</div>
-                <span className="text-[10px] text-[#00FF88] font-semibold">{currentPloughScene.stage}</span>
               </div>
-
-              <div className="p-3.5 rounded-2xl bg-[#0B0F14]/70 border border-white/10">
-                <div className="flex items-center space-x-1.5 text-xs text-[#94A3B8] font-medium">
-                  <Droplets className="w-3.5 h-3.5 text-[#06B6D4]" />
-                  <span>Moisture Hold</span>
-                </div>
-                <div className="text-lg font-black text-[#F1F5F9] mt-1">{currentPloughScene.moistureRetention}</div>
-                <span className="text-[10px] text-[#94A3B8]">Deep Bed Preservation</span>
-              </div>
-
-              <div className="p-3.5 rounded-2xl bg-[#0B0F14]/70 border border-white/10">
-                <div className="flex items-center space-x-1.5 text-xs text-[#94A3B8] font-medium">
-                  <Activity className="w-3.5 h-3.5 text-[#F59E0B]" />
-                  <span>Soil Aeration</span>
-                </div>
-                <div className="text-lg font-black text-[#F1F5F9] mt-1">{currentPloughScene.soilAeration.split(' ')[0]}</div>
-                <span className="text-[10px] text-[#00FF88] font-semibold">High Porosity</span>
-              </div>
-
-              <div className="p-3.5 rounded-2xl bg-[#0B0F14]/70 border border-white/10">
-                <div className="flex items-center space-x-1.5 text-xs text-[#94A3B8] font-medium">
-                  <Compass className="w-3.5 h-3.5 text-[#8B5CF6]" />
-                  <span>Plough Speed</span>
-                </div>
-                <div className="text-lg font-black text-[#F1F5F9] mt-1">{currentPloughScene.acreageRate.split(' ')[0]} ac/h</div>
-                <span className="text-[10px] text-[#8B5CF6] font-semibold truncate block">
-                  {currentPloughScene.operator.split('&')[0]}
-                </span>
-              </div>
-            </div>
-
-            {/* Quick Action CTAs */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
-              <button
-                onClick={() => onNavigate('income-prediction')}
-                className="px-5 py-2.5 rounded-xl bg-[#00FF88] hover:bg-[#00FF88]/90 text-[#0B0F14] text-xs font-black transition-all flex items-center space-x-2 shadow-sm shadow-[#00FF88]/20 hover:shadow-[#00FF88]/40 cursor-pointer"
-              >
-                <span>Calculate Income for Ploughed Land</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-
-              <button
-                onClick={() => onNavigate('farmer-clustering')}
-                className="px-5 py-2.5 rounded-xl bg-[#111827] hover:bg-white/10 text-[#F1F5F9] border border-white/15 text-xs font-bold transition-all flex items-center space-x-2 cursor-pointer"
-              >
-                <span>Find Your Farming Cluster</span>
-                <Users className="w-3.5 h-3.5 text-[#06B6D4]" />
-              </button>
-            </div>
-          </div>
-
-          {/* Right Column: High-Res Farmers Ploughing Field Showcase Card */}
-          <div className="w-full lg:w-[420px] shrink-0">
-            <div className="relative rounded-2xl overflow-hidden border border-white/15 shadow-2xl group">
-              <div className="aspect-[16/10] sm:aspect-[16/9] lg:aspect-[4/3] w-full overflow-hidden bg-[#0B0F14]">
-                <img
-                  src={currentPloughScene.imgUrl}
-                  alt="Farmers ploughing field with modern agricultural machinery"
-                  referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
-                />
-              </div>
-
-              {/* Dark subtle gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F14]/85 via-transparent to-transparent pointer-events-none" />
-
-              {/* Floating Bottom Info Pill */}
-              <div className="absolute bottom-3 left-3 right-3 p-3 rounded-xl bg-[#0B0F14]/85 border border-white/15 backdrop-blur-md flex items-center justify-between text-xs">
-                <div className="flex items-center space-x-2 min-w-0">
-                  <span className="w-2 h-2 rounded-full bg-[#00FF88] animate-pulse shrink-0" />
-                  <span className="font-bold text-[#F1F5F9] truncate">{currentPloughScene.label}</span>
-                </div>
-                <span className="text-[10px] font-semibold text-[#00FF88] uppercase tracking-wider shrink-0 ml-2">
-                  {currentPloughScene.stage}
-                </span>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Core Features Grid (3 Dynamic Glass Cards) */}
-      <div>
-        <div className="text-center sm:text-left mb-6">
-          <h2 className="text-2xl font-black text-[#F1F5F9] tracking-tight">Core Capabilities</h2>
-          <p className="text-xs text-[#94A3B8] mt-1">State-of-the-art agronomic machine learning tools built for precision decision-making</p>
-        </div>
+      {/* =========================================================================
+          SECTION F: WHY AGRICULTURE MATTERS
+          ========================================================================= */}
+      <section className="py-20 sm:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <SectionHeading
+          badge="Global & Local Significance"
+          title="Why Agriculture Matters"
+          description="Agriculture is the bedrock of human civilization. Its ripple effects extend far beyond fields and pastures into economic stability, nutritional well-being, and ecological health."
+          dark={true}
+        />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Card 1: Income Prediction */}
-          <div
-            onClick={() => onNavigate('income-prediction')}
-            className="glass-card glass-card-hover rounded-3xl p-6 flex flex-col justify-between cursor-pointer group relative overflow-hidden"
-          >
-            <div className="space-y-4">
-              <div className="w-12 h-12 rounded-2xl bg-[#00FF88]/15 border border-[#00FF88]/30 text-[#00FF88] flex items-center justify-center shadow-sm shadow-[#00FF88]/20">
-                <TrendingUp className="w-6 h-6" />
-              </div>
-              <div>
-                <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#00FF88]">Supervised Regression</span>
-                <h3 className="text-lg font-bold text-[#F1F5F9] mt-0.5 group-hover:text-[#00FF88] transition-colors">
-                  Household Income Prediction
-                </h3>
-              </div>
-              <p className="text-xs text-[#94A3B8] leading-relaxed">
-                Estimate expected seasonal gross income (in ₦ and ₹) modeled across acreage, crop management, livestock yields, and experience metrics.
-              </p>
-            </div>
-
-            <div className="mt-6 pt-4 border-t border-white/10 flex items-center text-xs font-bold text-[#00FF88] group-hover:translate-x-1 transition-transform space-x-1">
-              <span>Run Income Estimator</span>
-              <ArrowRight className="w-4 h-4" />
-            </div>
-          </div>
-
-          {/* Card 2: Farmer Clustering */}
-          <div
-            onClick={() => onNavigate('farmer-clustering')}
-            className="glass-card glass-card-hover rounded-3xl p-6 flex flex-col justify-between cursor-pointer group relative overflow-hidden"
-          >
-            <div className="space-y-4">
-              <div className="w-12 h-12 rounded-2xl bg-[#06B6D4]/15 border border-[#06B6D4]/30 text-[#06B6D4] flex items-center justify-center shadow-sm shadow-[#06B6D4]/20">
-                <Users className="w-6 h-6" />
-              </div>
-              <div>
-                <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#06B6D4]">Unsupervised Learning</span>
-                <h3 className="text-lg font-bold text-[#F1F5F9] mt-0.5 group-hover:text-[#06B6D4] transition-colors">
-                  Farmer Clustering
-                </h3>
-              </div>
-              <p className="text-xs text-[#94A3B8] leading-relaxed">
-                Discover your exact agricultural archetype out of 5 regional clusters and receive actionable agronomic extension recommendations.
-              </p>
-            </div>
-
-            <div className="mt-6 pt-4 border-t border-white/10 flex items-center text-xs font-bold text-[#06B6D4] group-hover:translate-x-1 transition-transform space-x-1">
-              <span>Discover Your Segment</span>
-              <ArrowRight className="w-4 h-4" />
-            </div>
-          </div>
-
-          {/* Card 3: Data Insights */}
-          <div
-            onClick={() => onNavigate('cluster-summary')}
-            className="glass-card glass-card-hover rounded-3xl p-6 flex flex-col justify-between cursor-pointer group relative overflow-hidden"
-          >
-            <div className="space-y-4">
-              <div className="w-12 h-12 rounded-2xl bg-[#8B5CF6]/15 border border-[#8B5CF6]/30 text-[#8B5CF6] flex items-center justify-center shadow-sm shadow-[#8B5CF6]/20">
-                <PieChart className="w-6 h-6" />
-              </div>
-              <div>
-                <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#8B5CF6]">Cohort Analytics</span>
-                <h3 className="text-lg font-bold text-[#F1F5F9] mt-0.5 group-hover:text-[#8B5CF6] transition-colors">
-                  Data &amp; Cluster Insights
-                </h3>
-              </div>
-              <p className="text-xs text-[#94A3B8] leading-relaxed">
-                Explore in-depth distributions, cluster centroid matrices, radar profiles, and statistical parameters across the 20,000 producer dataset.
-              </p>
-            </div>
-
-            <div className="mt-6 pt-4 border-t border-white/10 flex items-center text-xs font-bold text-[#8B5CF6] group-hover:translate-x-1 transition-transform space-x-1">
-              <span>Explore Archetype Matrix</span>
-              <ArrowRight className="w-4 h-4" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 5 Regional Farmer Clusters Showcase */}
-      <div className="relative overflow-hidden rounded-3xl p-6 sm:p-8 glass-card border border-white/10 shadow-xl space-y-6">
-        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h3 className="text-xl font-black text-[#F1F5F9]">5 Regional Farmer Clusters</h3>
-            <p className="text-xs text-[#94A3B8] mt-0.5">
-              Identified across 20,000 regional agricultural producers
-            </p>
-          </div>
-          <button
-            onClick={() => onNavigate('cluster-summary')}
-            className="self-start sm:self-auto px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 text-[#00FF88] hover:text-white border border-[#00FF88]/30 text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer shadow-xs"
-          >
-            <span>View Full Archetype Matrix</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
-        </div>
-
-        <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-          {Object.values(CLUSTER_SEGMENTS).map((c) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          {[
+            {
+              title: 'Food Production',
+              desc: 'Supplying the essential calories, proteins, and vitamins that sustain global populations and prevent food insecurity.',
+              icon: Wheat,
+            },
+            {
+              title: 'Rural Livelihoods',
+              desc: 'Providing purposeful employment, family sustenance, and generational stability for billions of rural residents worldwide.',
+              icon: Users,
+            },
+            {
+              title: 'Household Income',
+              desc: 'Enabling families to meet living expenses, invest in children’s education, and purchase vital healthcare and community goods.',
+              icon: DollarSign,
+            },
+            {
+              title: 'Livestock & Crop Resources',
+              desc: 'Generating natural fibers, timber, dairy, leather, and organic matter that supply regional trade and manufacturing sectors.',
+              icon: HeartHandshake,
+            },
+            {
+              title: 'Local Economies',
+              desc: 'Stimulating trade in rural towns by connecting agricultural produce to processing facilities, transporters, and open markets.',
+              icon: Globe2,
+            },
+            {
+              title: 'Sustainable Resource Care',
+              desc: 'Encouraging responsible stewardship of freshwater watersheds, biodiversity, and soil organic carbon reserves.',
+              icon: Sprout,
+            },
+          ].map((item, idx) => (
             <div
-              key={c.id}
-              onClick={() => onNavigate('cluster-summary')}
-              className="p-4 rounded-2xl bg-white/[0.04] border border-white/10 hover:border-[#00FF88]/50 hover:bg-white/[0.07] transition-all cursor-pointer group"
+              key={idx}
+              className="agri-card p-6 sm:p-7 flex flex-col justify-between bg-[#111F17] group border border-white/10 hover:border-[#00FF88]/50 rounded-2xl shadow-xl transition-all"
             >
-              <div className="flex items-center justify-between mb-2">
-                <span className="w-2.5 h-2.5 rounded-full ring-2 ring-white/20" style={{ backgroundColor: c.color }} />
-                <span className="text-[10px] font-mono font-bold text-[#00FF88]">{c.percentage}%</span>
+              <div className="flex items-start gap-4">
+                <div className="w-11 h-11 rounded-xl bg-[#00FF88]/15 border border-[#00FF88]/30 text-[#00FF88] flex items-center justify-center shrink-0 group-hover:bg-[#00FF88] group-hover:text-[#0A120D] transition-colors">
+                  <item.icon className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base sm:text-lg font-bold text-white mb-1.5 group-hover:text-[#00FF88] transition-colors">
+                    {item.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-[#94A3B8] leading-relaxed">
+                    {item.desc}
+                  </p>
+                </div>
               </div>
-              <div className="text-xs font-bold text-[#94A3B8]">{c.groupCode}</div>
-              <div className="text-sm font-extrabold text-[#F1F5F9] mt-0.5 group-hover:text-[#00FF88] transition-colors">{c.name}</div>
-              <p className="text-[11px] text-[#94A3B8]/80 mt-1 line-clamp-2 leading-relaxed">{c.characteristics.primaryActivity}</p>
             </div>
           ))}
         </div>
-      </div>
-    </motion.div>
+      </section>
+
+      {/* =========================================================================
+          SECTION G: CALL TO ACTION
+          ========================================================================= */}
+      <CTASection
+        badge="Platform Mission"
+        headline="Explore a Smarter Perspective on Agriculture"
+        supportingText="Discover the connection between farming practices, agricultural resources, and technology."
+      />
+    </div>
   );
 };

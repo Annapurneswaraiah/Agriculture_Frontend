@@ -177,7 +177,7 @@ export const FarmerClustering: React.FC<FarmerClusteringProps> = ({
       setInferenceMeta({ source: resp.source, latencyMs: resp.latencyMs });
       if (onPredictionComplete) onPredictionComplete();
     } catch (err: any) {
-      setError(err.message || 'Failed to infer farmer clustering.');
+      setError(err.message || 'Failed to determine farmer classification.');
     } finally {
       setLoading(false);
     }
@@ -197,13 +197,13 @@ export const FarmerClustering: React.FC<FarmerClusteringProps> = ({
         <div>
           <div className="flex items-center space-x-2 text-[#06B6D4] font-bold text-xs uppercase tracking-wider mb-1">
             <Users className="w-4 h-4" />
-            <span>ML Unsupervised Clustering Model</span>
+            <span>Regional Farm Typology System</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-[#F1F5F9] tracking-tight">
-            Farmer Clustering &amp; Segmentation
+            Farmer Classification &amp; Peer Groups
           </h1>
           <p className="text-xs sm:text-sm text-[#94A3B8] mt-1 max-w-2xl">
-            Identify which agricultural cohort and demographic peer group a farm belongs to using machine learning clustering centroids.
+            Identify which agricultural cohort and regional demographic peer group a farm belongs to receive tailored operational benchmarks and extension recommendations.
           </p>
         </div>
 
@@ -252,7 +252,7 @@ export const FarmerClustering: React.FC<FarmerClusteringProps> = ({
 
       {error && (
         <ErrorMessage
-          title="Clustering Service Error"
+          title="Classification Service Advisory"
           message={error}
           onRetry={handleSubmit as any}
           onDismiss={() => setError(null)}
@@ -420,7 +420,7 @@ export const FarmerClustering: React.FC<FarmerClusteringProps> = ({
                 {loading ? (
                   <>
                     <RefreshCw className="w-4 h-4 animate-spin text-[#0B0F14]" />
-                    <span>Computing Cluster Centroids...</span>
+                    <span>Analyzing Farm Typology...</span>
                   </>
                 ) : (
                   <>

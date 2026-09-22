@@ -1,324 +1,530 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
-  Info,
-  Server,
-  Cpu,
-  Database,
-  ExternalLink,
+  Sprout,
+  ShieldCheck,
+  Wheat,
+  HeartHandshake,
+  TrendingUp,
+  Globe2,
+  Users,
+  Layers,
+  Droplets,
+  DollarSign,
+  Compass,
   CheckCircle2,
-  Sliders,
-  Sparkles,
-  Zap,
-  Tag,
-  Copy,
+  HelpCircle,
+  AlertTriangle,
+  Lightbulb,
+  ArrowRight,
+  Database,
+  BarChart2,
   Check,
-  Sprout
 } from 'lucide-react';
-import { motion } from 'motion/react';
-import { getRenderBaseUrl, setRenderBaseUrl } from '../services/api';
+import { HeroSection } from '../components/HeroSection';
+import { SectionHeading } from '../components/SectionHeading';
+import { CTASection } from '../components/CTASection';
 
 export const About: React.FC = () => {
-  const [currentUrl, setCurrentUrl] = useState(getRenderBaseUrl());
-  const [savedStatus, setSavedStatus] = useState(false);
-  const [copiedField, setCopiedField] = useState<string | null>(null);
-
-  const handleSaveUrl = (e: React.FormEvent) => {
-    e.preventDefault();
-    setRenderBaseUrl(currentUrl);
-    setSavedStatus(true);
-    setTimeout(() => setSavedStatus(false), 3000);
-  };
-
-  const handleCopy = (text: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedField(text);
-    setTimeout(() => setCopiedField(null), 2000);
-  };
-
-  const modelFields = [
-    {
-      name: 'farming_system',
-      type: 'Categorical',
-      dataType: 'string',
-      range: '5 defined systems',
-      desc: 'Primary agricultural management framework (e.g. Commercial Crop, Mixed Farming, Livestock Specialist).',
-    },
-    {
-      name: 'head_of_household_age',
-      type: 'Demographic',
-      dataType: 'integer',
-      range: '18 – 95 years',
-      desc: 'Age of primary farm decision-maker in completed years, acting as a proxy for generational agronomic experience.',
-    },
-    {
-      name: 'land_owned_hectares',
-      type: 'Acreage',
-      dataType: 'float',
-      range: '0.1 – 500.0 ha',
-      desc: 'Total cultivable arable land holdings measured in metric hectares (1 hectare ≈ 2.471 standard acres).',
-    },
-    {
-      name: 'fertilizer_used_kg_per_hectare',
-      type: 'Chemical Inputs',
-      dataType: 'float',
-      range: '0 – 800 kg/ha',
-      desc: 'Total applied Nitrogen, Phosphorus, Potassium (NPK) and micronutrient compound volumes per hectare.',
-    },
-    {
-      name: 'goats_number',
-      type: 'Small Ruminants',
-      dataType: 'integer',
-      range: '0 – 250 head',
-      desc: 'Total count of owned herd goats contributing to short-cycle liquidity and organic manure generation.',
-    },
-    {
-      name: 'sheep_number',
-      type: 'Small Ruminants',
-      dataType: 'integer',
-      range: '0 – 250 head',
-      desc: 'Total count of domestic sheep maintained for wool, meat, and seasonal festival markets.',
-    },
-    {
-      name: 'livestock_eggs_per_week',
-      type: 'Poultry Yield',
-      dataType: 'integer',
-      range: '0 – 2,500 eggs',
-      desc: 'Weekly harvested poultry egg units yielding steady recurrent household operating cashflows.',
-    },
-    {
-      name: 'livestock_milk_litres_per_week',
-      type: 'Dairy Output',
-      dataType: 'float',
-      range: '0 – 1,500 litres',
-      desc: 'Weekly dairy output in liquid litres supporting dietary sustenance and local cooperative sales.',
-    },
-    {
-      name: 'predicted_income_ngn',
-      type: 'Output Target (Regression)',
-      dataType: 'float (NGN)',
-      range: 'Annual Revenue',
-      desc: 'Target regression outcome forecasting net agricultural earnings with parallel Indian Rupee (INR) conversion.',
-    },
-    {
-      name: 'cluster_id & archetype',
-      type: 'Output Target (Clustering)',
-      dataType: 'integer (0 – 4)',
-      range: '5 Cohorts',
-      desc: 'K-Means unsupervised cluster index mapping household demographics into targeted support personas.',
-    },
-  ];
+  const navigate = useNavigate();
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 14 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35, ease: 'easeOut' }}
-      className="max-w-5xl mx-auto space-y-6 pb-8"
-    >
-      {/* Header Banner */}
-      <div className="relative overflow-hidden rounded-3xl p-6 sm:p-8 md:p-10 glass-card border border-white/10 shadow-2xl">
-        {/* Ambient glow */}
-        <div className="absolute top-0 right-1/4 w-80 h-80 rounded-full bg-[#00FF88]/10 blur-[90px] pointer-events-none" />
-        <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 opacity-5 pointer-events-none">
-          <Sprout className="w-56 h-56 text-[#00FF88]" />
-        </div>
+    <div className="min-h-screen bg-transparent text-[#F1F5F9]">
+      {/* =========================================================================
+          SECTION A: ABOUT HERO
+          ========================================================================= */}
+      <HeroSection
+        compact
+        badgeText="Domain Insights &amp; Purpose"
+        title="Understanding Farmers. Exploring Agriculture. Enabling Better Decisions."
+        subtitle="Learn about the farming realities, agricultural resources, and technology-driven opportunities that shape modern agriculture."
+        backgroundImage="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1800&q=80"
+        buttons={[
+          {
+            label: 'Explore Our Mission',
+            onClick: () => {
+              const el = document.getElementById('our-mission');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            },
+            variant: 'primary',
+          },
+        ]}
+      />
 
-        <div className="relative z-10 max-w-3xl space-y-2.5">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#00FF88]/15 border border-[#00FF88]/30 text-[#00FF88] font-bold text-xs uppercase tracking-wider">
-            <Info className="w-3.5 h-3.5 text-[#00FF88]" />
-            <span>About AgriAI Platform</span>
-          </div>
-          <h1 className="text-2xl sm:text-4xl font-black text-[#F1F5F9] tracking-tight leading-tight">
-            Data-Driven Agriculture for a Greener Tomorrow
-          </h1>
-          <p className="text-xs sm:text-sm text-[#94A3B8] leading-relaxed">
-            AgriAI is a dual-engine agricultural machine learning platform that empowers smallholders, commercial producers, and extension agents with predictive economic forecasts and demographic cohort clustering.
-          </p>
-        </div>
-      </div>
+      {/* =========================================================================
+          SECTION B: ABOUT AGRICULTURE
+          ========================================================================= */}
+      <section className="py-20 sm:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <SectionHeading
+          badge="Essential Perspectives"
+          title="The Integral Role of Agriculture"
+          description="Agriculture is a multi-dimensional discipline intertwining environmental stewardship, family heritage, food chemistry, and local economic resilience."
+          dark={true}
+        />
 
-      {/* Models Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Model 1: Regression */}
-        <div className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10 shadow-xl space-y-4">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl bg-[#00FF88]/15 border border-[#00FF88]/30 text-[#00FF88] flex items-center justify-center">
-              <Cpu className="w-5 h-5 text-[#00FF88]" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          {[
+            {
+              title: 'Food Security',
+              desc: 'Ensuring consistent, safe, and nutritious nourishment for households and urban centers across every continent.',
+              icon: Wheat,
+            },
+            {
+              title: 'Farmer Livelihoods',
+              desc: 'Empowering millions of smallholder and commercial producers with dignified, sustainable economic independence.',
+              icon: Users,
+            },
+            {
+              title: 'Household Resources',
+              desc: 'Transforming land, seeds, livestock, and labor into multi-generational stability and family well-being.',
+              icon: HeartHandshake,
+            },
+            {
+              title: 'Crop Cultivation',
+              desc: 'Stewarding diverse grain, pulse, vegetable, and cash crops suited to regional climates and micro-environments.',
+              icon: Sprout,
+            },
+            {
+              title: 'Livestock Management',
+              desc: 'Maintaining animal health, biological forage cycles, draught assistance, and daily dairy and egg harvesting.',
+              icon: HeartHandshake,
+            },
+            {
+              title: 'Rural Development',
+              desc: 'Building infrastructure, local markets, transport corridors, and skilled agricultural extension services.',
+              icon: Globe2,
+            },
+          ].map((item, idx) => (
+            <div
+              key={idx}
+              className="agri-card p-6 sm:p-7 flex flex-col justify-between bg-[#111F17] group border border-white/10 hover:border-[#00FF88]/50 rounded-2xl shadow-xl transition-all"
+            >
+              <div>
+                <div className="w-11 h-11 rounded-xl bg-[#00FF88]/15 border border-[#00FF88]/30 text-[#00FF88] flex items-center justify-center mb-4 group-hover:bg-[#00FF88] group-hover:text-[#0A120D] transition-colors">
+                  <item.icon className="w-5 h-5" />
+                </div>
+                <h3 className="text-base sm:text-lg font-bold text-white mb-2 group-hover:text-[#00FF88] transition-colors">
+                  {item.title}
+                </h3>
+                <p className="text-xs sm:text-sm text-[#94A3B8] leading-relaxed">
+                  {item.desc}
+                </p>
+              </div>
             </div>
-            <div>
-              <h2 className="text-base font-bold text-[#F1F5F9]">Income Regression Model</h2>
-              <span className="text-xs text-[#00FF88] font-semibold">
-                R&sup2; Score: 0.86 &bull; Supervised ML
-              </span>
+          ))}
+        </div>
+      </section>
+
+      {/* =========================================================================
+          SECTION C: UNDERSTANDING FARMERS' REALITIES
+          ========================================================================= */}
+      <section className="py-20 sm:py-28 bg-[#0D1811] border-y border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeading
+            badge="Contextual Realities"
+            title="Understanding Farmers’ Realities"
+            description="No two farms are identical. Farmers operate under diverse physical, social, and economic conditions that fundamentally shape their daily choices and long-term opportunities."
+            dark={true}
+          />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {/* 1. Farming System */}
+            <div className="agri-card p-6 sm:p-8 bg-[#111F17] flex flex-col justify-between border border-white/10 hover:border-[#00FF88]/50 rounded-2xl shadow-xl transition-all">
+              <div>
+                <div className="text-[11px] font-bold text-[#00FF88] uppercase tracking-wider mb-2">
+                  System Context
+                </div>
+                <h3 className="text-xl font-bold text-white mb-3">
+                  Farming System
+                </h3>
+                <p className="text-xs sm:text-sm text-[#94A3B8] leading-relaxed">
+                  Whether a household engages in subsistence, mixed-crop livestock, or commercial cropping alters how labor is allocated throughout the year and how risks are managed during droughts or market shifts.
+                </p>
+              </div>
+              <div className="mt-5 pt-4 border-t border-white/10 text-xs text-[#00FF88] font-semibold flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-[#00FF88]" />
+                <span>Influences operational organization</span>
+              </div>
+            </div>
+
+            {/* 2. Household Demographics */}
+            <div className="agri-card p-6 sm:p-8 bg-[#111F17] flex flex-col justify-between border border-white/10 hover:border-[#00FF88]/50 rounded-2xl shadow-xl transition-all">
+              <div>
+                <div className="text-[11px] font-bold text-[#00FF88] uppercase tracking-wider mb-2">
+                  Human Context
+                </div>
+                <h3 className="text-xl font-bold text-white mb-3">
+                  Household Demographics
+                </h3>
+                <p className="text-xs sm:text-sm text-[#94A3B8] leading-relaxed">
+                  Family size, generational knowledge, age distribution, and gender-shared responsibilities provide vital context for understanding labor capacity and consumption requirements on the farm.
+                </p>
+              </div>
+              <div className="mt-5 pt-4 border-t border-white/10 text-xs text-[#00FF88] font-semibold flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-[#00FF88]" />
+                <span>Defines labor and family needs</span>
+              </div>
+            </div>
+
+            {/* 3. Land Ownership */}
+            <div className="agri-card p-6 sm:p-8 bg-[#111F17] flex flex-col justify-between border border-white/10 hover:border-[#00FF88]/50 rounded-2xl shadow-xl transition-all">
+              <div>
+                <div className="text-[11px] font-bold text-[#00FF88] uppercase tracking-wider mb-2">
+                  Acreage &amp; Tenure
+                </div>
+                <h3 className="text-xl font-bold text-white mb-3">
+                  Land Ownership
+                </h3>
+                <p className="text-xs sm:text-sm text-[#94A3B8] leading-relaxed">
+                  The size of cultivated acreage and security of tenure directly dictate whether a farmer can plant long-term perennial fruit orchards, invest in irrigation lines, or rotate fallow pasture.
+                </p>
+              </div>
+              <div className="mt-5 pt-4 border-t border-white/10 text-xs text-[#00FF88] font-semibold flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-[#00FF88]" />
+                <span>Shapes capital investments &amp; scale</span>
+              </div>
+            </div>
+
+            {/* 4. Fertilizer Usage */}
+            <div className="agri-card p-6 sm:p-8 bg-[#111F17] flex flex-col justify-between border border-white/10 hover:border-[#00FF88]/50 rounded-2xl shadow-xl transition-all">
+              <div>
+                <div className="text-[11px] font-bold text-[#00FF88] uppercase tracking-wider mb-2">
+                  Agronomic Inputs
+                </div>
+                <h3 className="text-xl font-bold text-white mb-3">
+                  Fertilizer Usage
+                </h3>
+                <p className="text-xs sm:text-sm text-[#94A3B8] leading-relaxed">
+                  Soil amendments, organic manures, compost tea, and commercial fertilizers must match the soil's natural chemistry. Managing inputs sustainably ensures soil productivity without unnecessary expense.
+                </p>
+              </div>
+              <div className="mt-5 pt-4 border-t border-white/10 text-xs text-[#00FF88] font-semibold flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-[#00FF88]" />
+                <span>Critical component of soil management</span>
+              </div>
+            </div>
+
+            {/* 5. Livestock Resources */}
+            <div className="agri-card p-6 sm:p-8 bg-[#111F17] flex flex-col justify-between border border-white/10 hover:border-[#00FF88]/50 rounded-2xl shadow-xl transition-all">
+              <div>
+                <div className="text-[11px] font-bold text-[#00FF88] uppercase tracking-wider mb-2">
+                  Biological Capital
+                </div>
+                <h3 className="text-xl font-bold text-white mb-3">
+                  Livestock Resources
+                </h3>
+                <p className="text-xs sm:text-sm text-[#94A3B8] leading-relaxed">
+                  Ruminants, draught animals, and poultry serve as biological living savings accounts, converting agricultural stalks into milk, wool, meat, and organic fertilizer for the next cropping season.
+                </p>
+              </div>
+              <div className="mt-5 pt-4 border-t border-white/10 text-xs text-[#00FF88] font-semibold flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-[#00FF88]" />
+                <span>Contributes food, power &amp; buffers</span>
+              </div>
+            </div>
+
+            {/* 6. Agricultural Income */}
+            <div className="agri-card p-6 sm:p-8 bg-[#111F17] flex flex-col justify-between border border-white/10 hover:border-[#00FF88]/50 rounded-2xl shadow-xl transition-all">
+              <div>
+                <div className="text-[11px] font-bold text-[#00FF88] uppercase tracking-wider mb-2">
+                  Financial Realities
+                </div>
+                <h3 className="text-xl font-bold text-white mb-3">
+                  Agricultural Income
+                </h3>
+                <p className="text-xs sm:text-sm text-[#94A3B8] leading-relaxed">
+                  Farm earnings are inherently seasonal, heavily influenced by weather volatility, post-harvest perishability, wholesale market access, and fluctuating input costs.
+                </p>
+              </div>
+              <div className="mt-5 pt-4 border-t border-white/10 text-xs text-[#00FF88] font-semibold flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-[#00FF88]" />
+                <span>Varies with seasons &amp; trade conditions</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          SECTION D: CHALLENGES IN AGRICULTURE
+          ========================================================================= */}
+      <section className="py-20 sm:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <SectionHeading
+          badge="Realistic Landscape"
+          title="Challenges That Shape Agricultural Livelihoods"
+          description="Farmers navigate an intricate web of environmental, economic, and logistical factors. While every farmer’s experience is unique, understanding these shared challenges is the first step toward building supportive solutions."
+          dark={true}
+        />
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          {/* Editorial Image Showcase */}
+          <div className="lg:col-span-5 space-y-4">
+            <div className="rounded-3xl overflow-hidden shadow-xl border border-white/10 h-80 sm:h-96 relative">
+              <img
+                src="https://images.unsplash.com/photo-1592982537447-7440770cbfc9?auto=format&fit=crop&w=800&q=80"
+                alt="Farmer working diligently in field"
+                referrerPolicy="no-referrer"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+              <div className="absolute bottom-5 left-5 right-5 text-white">
+                <p className="text-xs font-semibold text-[#00FF88] uppercase tracking-wider mb-1">
+                  Field Perspective
+                </p>
+                <p className="text-sm font-medium leading-snug">
+                  Agricultural resilience requires balanced resources, agronomic knowledge, and seasonal adaptability.
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-[#111F17] p-5 rounded-2xl border border-white/10 text-xs text-[#94A3B8] space-y-1.5">
+              <div className="font-bold text-white flex items-center gap-1.5">
+                <AlertTriangle className="w-4 h-4 text-[#00FF88]" />
+                <span>Contextual Note</span>
+              </div>
+              <p>
+                These represent common challenges observed across global agriculture. Individual farming holdings experience these pressures differently based on regional policy, soil geography, and community networks.
+              </p>
             </div>
           </div>
 
-          <p className="text-xs text-[#94A3B8] leading-relaxed">
-            Estimates annual net household revenue in Nigerian Naira (NGN) and converts to Indian Rupee (INR) based on 8 multivariate agricultural vectors: land size, chemical input rates, livestock quantities, and animal dairy/egg productivity.
-          </p>
-
-          {/* Endpoint Field */}
-          <div className="p-3 bg-[#0B0F14] text-[#F1F5F9] rounded-xl border border-white/10 text-xs font-mono flex items-center justify-between">
-            <span className="font-bold text-[#00FF88]">
-              POST /predict
-            </span>
-            <span className="text-[10px] text-[#94A3B8] font-semibold px-2 py-0.5 rounded bg-white/5 border border-white/10">
-              Regression Endpoint
-            </span>
+          {/* Detailed Challenges List */}
+          <div className="lg:col-span-7 space-y-3.5">
+            {[
+              {
+                title: 'Limited Access to Agricultural Resources',
+                desc: 'Access to certified seed varieties, modern soil testing services, and affordable mechanical hire equipment varies widely across rural areas.',
+              },
+              {
+                title: 'Differences in Land Availability & Fragmentation',
+                desc: 'Inheritance partitions and rural land pressures often leave smallholders with separated micro-plots that complicate mechanization and efficient watering.',
+              },
+              {
+                title: 'Fertilizer & Input Price Volatility',
+                desc: 'Fluctuating global fertilizer supply chains and transport surcharges create uncertainty when planning early-season planting budgets.',
+              },
+              {
+                title: 'Livestock Management & Feed Expenses',
+                desc: 'Dry seasons often deplete natural grazing forage, requiring supplemental grain feed and veterinary investments to prevent herd morbidity.',
+              },
+              {
+                title: 'Weather & Environmental Uncertainty',
+                desc: 'Unpredictable monsoon timing, erratic dry spells, and sudden pest pressures challenge traditional planting calendars.',
+              },
+              {
+                title: 'Market Access & Price Fluctuations',
+                desc: 'Perishable harvests must often be sold immediately at harvest time when regional supply is highest, depressing wholesale farm-gate prices.',
+              },
+              {
+                title: 'Variations in Seasonal Household Cash Flow',
+                desc: 'Income is realized only during harvest windows, while farming input costs and household living expenses occur continuously year-round.',
+              },
+            ].map((ch, idx) => (
+              <div
+                key={idx}
+                className="bg-[#111F17] rounded-2xl p-4 sm:p-5 border border-white/10 hover:border-[#00FF88]/50 transition-colors shadow-xs"
+              >
+                <h4 className="text-sm sm:text-base font-bold text-white mb-1">
+                  {ch.title}
+                </h4>
+                <p className="text-xs sm:text-sm text-[#94A3B8] leading-relaxed">
+                  {ch.desc}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
+      </section>
 
-        {/* Model 2: Clustering */}
-        <div className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10 shadow-xl space-y-4">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl bg-[#06B6D4]/15 border border-[#06B6D4]/30 text-[#06B6D4] flex items-center justify-center">
-              <Database className="w-5 h-5 text-[#06B6D4]" />
-            </div>
-            <div>
-              <h2 className="text-base font-bold text-[#F1F5F9]">Farmer Clustering Model</h2>
-              <span className="text-xs text-[#06B6D4] font-semibold">
-                Silhouette Score: 0.72 &bull; Unsupervised K-Means
-              </span>
-            </div>
+      {/* =========================================================================
+          SECTION E: WHY DATA MATTERS IN AGRICULTURE
+          ========================================================================= */}
+      <section className="py-20 sm:py-28 bg-[#0D1811] border-y border-white/10 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeading
+            dark
+            badge="Informed Agriculture"
+            title="Turning Agricultural Data into Understanding"
+            description="Data in agriculture is not about replacing the farmer's intuition—it is about organizing observations, recognizing historical patterns, and supporting grounded decision-making."
+          />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {[
+              {
+                title: 'Farming Systems',
+                desc: 'Comparing how different management typologies—from specialized grain monocultures to multi-crop livestock holdings—adapt over multiple rainfall cycles.',
+                icon: Layers,
+              },
+              {
+                title: 'Land Ownership & Scale',
+                desc: 'Analyzing how plot dimensions and tenure agreements correlate with crop diversity and long-term soil conservation investments.',
+                icon: Compass,
+              },
+              {
+                title: 'Agricultural Inputs',
+                desc: 'Tracking fertilizer application rates, seed germination ratios, and compost additions to identify diminishing returns or under-nourishment.',
+                icon: Sprout,
+              },
+              {
+                title: 'Livestock Resources',
+                desc: 'Recording livestock herd counts, daily fodder requirements, and reproductive health to balance grazing pressure with pasture regeneration.',
+                icon: HeartHandshake,
+              },
+              {
+                title: 'Farm Productivity',
+                desc: 'Evaluating yield responses per hectare relative to seasonal rainfall to understand which farming practices demonstrate natural climate resilience.',
+                icon: BarChart2,
+              },
+              {
+                title: 'Household Income Trends',
+                desc: 'Studying how diverse income streams—such as egg sales during crop gestation—stabilize family livelihoods against crop market volatility.',
+                icon: DollarSign,
+              },
+            ].map((item, idx) => (
+              <div
+                key={idx}
+                className="bg-[#111F17] rounded-2xl p-6 sm:p-7 border border-white/10 shadow-md hover:border-[#00FF88]/50 transition-colors"
+              >
+                <div className="w-10 h-10 rounded-xl bg-[#00FF88]/15 border border-[#00FF88]/30 text-[#00FF88] flex items-center justify-center mb-4">
+                  <item.icon className="w-5 h-5" />
+                </div>
+                <h3 className="text-base sm:text-lg font-bold text-white mb-2">
+                  {item.title}
+                </h3>
+                <p className="text-xs sm:text-sm text-[#94A3B8] leading-relaxed">
+                  {item.desc}
+                </p>
+              </div>
+            ))}
           </div>
 
-          <p className="text-xs text-[#94A3B8] leading-relaxed">
-            Groups farming households into 5 distinct behavioral archetypes: Commercial, Mixed, Livestock-Focused, Smallholder, and Subsistence, providing targeted agronomic interventions.
-          </p>
-
-          {/* Endpoint Field */}
-          <div className="p-3 bg-[#0B0F14] text-[#F1F5F9] rounded-xl border border-white/10 text-xs font-mono flex items-center justify-between">
-            <span className="font-bold text-[#06B6D4]">
-              POST /cluster
-            </span>
-            <span className="text-[10px] text-[#94A3B8] font-semibold px-2 py-0.5 rounded bg-white/5 border border-white/10">
-              Clustering Endpoint
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* Backend API Configuration */}
-      <div className="relative overflow-hidden rounded-3xl p-6 sm:p-8 glass-card border border-white/10 shadow-xl space-y-4">
-        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex items-center space-x-2 text-[#F1F5F9] font-bold text-base sm:text-lg">
-            <Server className="w-5 h-5 text-[#00FF88]" />
-            <h2>Render Deployment &amp; Endpoint Config</h2>
-          </div>
-          <span className="self-start sm:self-auto text-[11px] font-bold text-[#00FF88] bg-[#00FF88]/15 px-3 py-1 rounded-full border border-[#00FF88]/30 flex items-center gap-2 shadow-xs">
-            <span className="w-2 h-2 rounded-full bg-[#00FF88] animate-pulse" />
-            Active Service URL
-          </span>
-        </div>
-
-        <p className="relative z-10 text-xs text-[#94A3B8] leading-relaxed max-w-3xl">
-          The machine learning models are deployed on Render running FastAPI and Uvicorn. You can customize the base endpoint below if you re-deploy or use a custom domain.
-        </p>
-
-        {/* URL Input Field */}
-        <form onSubmit={handleSaveUrl} className="relative z-10 flex flex-col sm:flex-row gap-3">
-          <div className="relative flex-1">
-            <input
-              type="url"
-              id="about-render-url-input"
-              value={currentUrl}
-              onChange={(e) => setCurrentUrl(e.target.value)}
-              className="w-full px-4 py-2.5 bg-[#0B0F14] border border-white/15 rounded-xl text-xs font-mono text-[#F1F5F9] placeholder-[#94A3B8]/40 focus:outline-none focus:border-[#00FF88] transition-all"
-              placeholder="https://agriculture-ml-model-bb2i.onrender.com"
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            id="about-update-url-btn"
-            className="px-5 py-2.5 bg-[#00FF88] hover:bg-[#00FF88]/90 text-[#0B0F14] text-xs font-black rounded-xl transition-all shadow-sm shadow-[#00FF88]/20 shrink-0 cursor-pointer"
-          >
-            {savedStatus ? '✓ Saved Successfully!' : 'Update Render URL'}
-          </button>
-        </form>
-
-        <div className="relative z-10 pt-1 flex flex-wrap gap-4 text-xs">
-          <a
-            href="https://agriculture-ml-model-bb2i.onrender.com/docs"
-            target="_blank"
-            rel="noreferrer"
-            className="text-[#00FF88] font-semibold hover:underline flex items-center space-x-1.5 transition-colors"
-          >
-            <span>Open FastAPI Interactive Swagger Documentation</span>
-            <ExternalLink className="w-3.5 h-3.5" />
-          </a>
-        </div>
-      </div>
-
-      {/* Feature Dictionary */}
-      <div className="relative overflow-hidden rounded-3xl p-6 sm:p-8 glass-card border border-white/10 shadow-xl space-y-5">
-        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-4">
-          <div>
-            <h3 className="text-base sm:text-lg font-bold text-[#F1F5F9] flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-[#8B5CF6]" />
-              <span>Model Feature Dictionary (10 Attributes)</span>
-            </h3>
-            <p className="text-xs text-[#94A3B8] mt-0.5">
-              Each variable below directly powers the neural regression equations and cluster centroids.
+          <div className="mt-12 p-6 rounded-2xl bg-[#0A120D] border border-white/10 text-center max-w-2xl mx-auto">
+            <p className="text-xs sm:text-sm text-[#94A3B8] leading-relaxed">
+              <span className="font-bold text-[#00FF88] block mb-1">A Balanced Perspective</span>
+              Data alone does not cultivate crops or resolve systemic agricultural challenges. Its true value emerges when paired with the practical experience, local soil knowledge, and dedication of farmers in their own fields.
             </p>
           </div>
-          <span className="text-[11px] font-bold text-[#8B5CF6] bg-[#8B5CF6]/15 px-3 py-1 rounded-full border border-[#8B5CF6]/30 shadow-xs w-fit">
-            10 Model Inputs &amp; Outputs
-          </span>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          SECTION F: OUR MISSION
+          ========================================================================= */}
+      <section id="our-mission" className="py-20 sm:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto text-center space-y-6">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#00FF88]/15 border border-[#00FF88]/30 text-[#00FF88] text-xs font-semibold uppercase tracking-wider">
+            <Sprout className="w-3.5 h-3.5" />
+            <span>Guiding Purpose</span>
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
+            Our Mission Is to Make Agricultural Insights More Accessible
+          </h2>
+
+          <p className="text-base sm:text-lg text-[#94A3B8] leading-relaxed max-w-3xl mx-auto">
+            We believe agricultural knowledge, research data, and sustainable practices should be clear, transparent, and readily available to farmers, students, and agricultural advocates worldwide.
+          </p>
         </div>
 
-        {/* Grid of Each Feature Field Card */}
-        <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-          {modelFields.map((field) => {
-            const isCopied = copiedField === field.name;
-            return (
-              <div
-                key={field.name}
-                id={`field-card-${field.name}`}
-                onClick={() => handleCopy(field.name)}
-                className="group relative p-4 rounded-2xl bg-[#0B0F14] border border-white/10 hover:border-[#00FF88]/50 transition-all cursor-pointer shadow-xs"
-                title="Click to copy parameter name"
-              >
-                {/* Header of Field Card */}
-                <div className="flex items-center justify-between gap-2 mb-1.5">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <span className="font-mono font-bold text-xs text-[#F1F5F9] group-hover:text-[#00FF88] transition-colors truncate">
-                      {field.name}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1.5 shrink-0">
-                    <span className="text-[10px] font-semibold text-[#06B6D4] bg-[#06B6D4]/15 border border-[#06B6D4]/30 px-2 py-0.5 rounded-full">
-                      {field.type}
-                    </span>
-                    <button
-                      type="button"
-                      className="p-1 text-[#94A3B8] group-hover:text-white transition-colors rounded"
-                      aria-label="Copy field name"
-                    >
-                      {isCopied ? (
-                        <Check className="w-3.5 h-3.5 text-[#00FF88]" />
-                      ) : (
-                        <Copy className="w-3.5 h-3.5 opacity-60 group-hover:opacity-100" />
-                      )}
-                    </button>
-                  </div>
+        <div className="mt-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          {[
+            {
+              title: 'Farmer-Focused Thinking',
+              desc: 'Every concept, guide, and data structure is grounded in the lived realities and practical priorities of farming households.',
+            },
+            {
+              title: 'Accessible Knowledge',
+              desc: 'Transforming complex agronomic terminology and scientific research into clear, actionable, and approachable explanations.',
+            },
+            {
+              title: 'Responsible Use of Data',
+              desc: 'Presenting data objectively without unrealistic claims, respecting farmer privacy, and acknowledging environmental limits.',
+            },
+            {
+              title: 'Technology-Enabled Understanding',
+              desc: 'Leveraging modern digital design to illustrate relationships between soil, fertilizer, livestock, and livelihoods.',
+            },
+            {
+              title: 'Informed Agricultural Decisions',
+              desc: 'Supporting producers and agricultural extension teams with the clarity needed to evaluate sustainable options.',
+            },
+            {
+              title: 'Community Collaboration',
+              desc: 'Fostering shared learning between local farmers, agricultural universities, and rural development organizations.',
+            },
+          ].map((pillar, idx) => (
+            <div
+              key={idx}
+              className="agri-card p-6 sm:p-7 bg-[#111F17] border border-white/10 hover:border-[#00FF88]/50 rounded-2xl flex flex-col justify-between shadow-xl transition-all"
+            >
+              <div>
+                <div className="w-8 h-8 rounded-lg bg-[#00FF88]/15 border border-[#00FF88]/30 text-[#00FF88] flex items-center justify-center font-bold text-xs mb-3">
+                  0{idx + 1}
                 </div>
-
-                {/* Description */}
-                <p className="text-[#94A3B8] text-[11px] leading-relaxed mb-2.5">
-                  {field.desc}
+                <h3 className="text-base sm:text-lg font-bold text-white mb-2">
+                  {pillar.title}
+                </h3>
+                <p className="text-xs sm:text-sm text-[#94A3B8] leading-relaxed">
+                  {pillar.desc}
                 </p>
-
-                {/* Footer specs of the field */}
-                <div className="flex items-center justify-between text-[10px] pt-2 border-t border-white/10 font-mono">
-                  <span className="text-[#00FF88] font-semibold">Type: {field.dataType}</span>
-                  <span className="text-[#94A3B8] font-semibold">{field.range}</span>
-                </div>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
-      </div>
-    </motion.div>
+      </section>
+
+      {/* =========================================================================
+          SECTION G: OUR VISION
+          ========================================================================= */}
+      <section className="py-20 sm:py-28 bg-[#0D1811] border-y border-white/10">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#00FF88]/15 border border-[#00FF88]/30 text-[#00FF88] text-xs font-semibold uppercase tracking-wider">
+            <Globe2 className="w-3.5 h-3.5" />
+            <span>Looking Ahead</span>
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
+            A More Informed and Technology-Enabled Agricultural Future
+          </h2>
+
+          <p className="text-sm sm:text-base lg:text-lg text-[#94A3B8] max-w-3xl mx-auto leading-relaxed">
+            We envision a world where every farming community has access to dependable agronomic perspectives, where digital tools celebrate and empower the farmer’s craft, and where sustainable land management ensures food security for generations to come.
+          </p>
+
+          <div className="pt-6 grid grid-cols-1 sm:grid-cols-3 gap-6 text-left">
+            <div className="bg-[#111F17] p-6 rounded-2xl border border-white/10 shadow-xs">
+              <span className="text-2xl font-black text-[#00FF88] block mb-1">Knowledge</span>
+              <p className="text-xs text-[#94A3B8]">
+                Accessible agricultural science for every grower, regardless of acreage or background.
+              </p>
+            </div>
+
+            <div className="bg-[#111F17] p-6 rounded-2xl border border-white/10 shadow-xs">
+              <span className="text-2xl font-black text-[#00FF88] block mb-1">Stewardship</span>
+              <p className="text-xs text-[#94A3B8]">
+                Preserving living topsoils, clean watersheds, and biodiverse rural ecosystems.
+              </p>
+            </div>
+
+            <div className="bg-[#111F17] p-6 rounded-2xl border border-white/10 shadow-xs">
+              <span className="text-2xl font-black text-[#00FF88] block mb-1">Resilience</span>
+              <p className="text-xs text-[#94A3B8]">
+                Equipping rural households to weather climate variability and market transitions.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          SECTION H: CLOSING CTA
+          ========================================================================= */}
+      <CTASection
+        variant="forest"
+        badge="Join Our Journey"
+        headline="Explore Agriculture from a New Perspective"
+        supportingText="Learn how farming practices, resources, and agricultural data connect."
+      />
+    </div>
   );
 };

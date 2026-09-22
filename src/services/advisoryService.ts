@@ -21,7 +21,7 @@ export const POPULAR_PROBLEM_PRESETS: ProblemPreset[] = [
     category: 'Income & Yield',
     title: 'Low Farm Income on Small Acreage',
     subject: 'How to increase farm revenue on 1.5 hectares of land?',
-    message: 'My family farm generates less than ₦200,000 annually from staple grain farming. We have 1.5 hectares and no livestock. How can we double our income?',
+    message: 'My family farm generates less than ₹200,000 annually from staple grain farming. We have 1.5 hectares and no livestock. How can we double our income?',
   },
   {
     id: 'livestock_yield',
@@ -89,7 +89,7 @@ export function analyzeQueryProblemAndAdvise(subject: string, message: string): 
       ],
       modelRecommendation:
         'Run the Income Prediction model with fertilizer set to 110 kg/ha alongside small livestock integration to observe a projected +18% net margin increase.',
-      potentialImpact: 'Saves ₦35,000–₦60,000 in input costs per hectare while preserving baseline yield.',
+      potentialImpact: 'Saves ₹35,000–₹60,000 in input costs per hectare while preserving baseline yield.',
       suggestedInputs: {
         farming_system: 'Mixed Cropping',
         land_owned_hectares: 2.5,
@@ -122,7 +122,7 @@ export function analyzeQueryProblemAndAdvise(subject: string, message: string): 
       problemTitle: 'Sub-optimal Net Household Income & Single-Enterprise Vulnerability',
       severity: 'Urgent',
       diagnosis:
-        'Reliance on monoculture staple crops on limited land (<2 hectares) creates severe economic vulnerability. The regression model weights indicate that crop-only farming generates the lowest baseline income (~₦180,000), whereas integrating small ruminants and dairy elevates income above ₦380,000.',
+        'Reliance on monoculture staple crops on limited land (<2 hectares) creates severe economic vulnerability. The regression model weights indicate that crop-only farming generates the lowest baseline income (~₹180,000), whereas integrating small ruminants and dairy elevates income above ₹380,000.',
       keyFactors: [
         'Small operational landholding without intensive high-value crops',
         'Lack of diversified secondary revenue streams (dairy, eggs, ruminants)',
@@ -135,7 +135,7 @@ export function analyzeQueryProblemAndAdvise(subject: string, message: string): 
       ],
       modelRecommendation:
         'In the Income Prediction model, upgrading from Subsistence to Commercial Crop Production or Mixed Cropping increases modeled income by 35% to 65%.',
-      potentialImpact: 'Projected net income boost from ~₦190,000 to >₦375,000 annually.',
+      potentialImpact: 'Projected net income boost from ~₹190,000 to >₹375,000 annually.',
       suggestedInputs: {
         farming_system: 'Commercial Crop Production',
         land_owned_hectares: 3.0,
@@ -181,8 +181,8 @@ export function analyzeQueryProblemAndAdvise(subject: string, message: string): 
         'Provide supplementary grain ration (brewers grain or maize bran) to lactating does and laying hens.',
       ],
       modelRecommendation:
-        'In Farmer Clustering, raising herd output to 30L milk/week and 45 eggs/week classifies your holding as Group_2 (Livestock Focused) with premium resilience.',
-      potentialImpact: 'Expected +40% increase in weekly dairy/egg sales, adding approx. ₦120,000 annual margin.',
+        'In Farmer Classification, raising herd output to 30L milk/week and 45 eggs/week classifies your holding as Group_2 (Livestock Focused) with premium resilience.',
+      potentialImpact: 'Expected +40% increase in weekly dairy/egg sales, adding approx. ₹120,000 annual margin.',
       suggestedInputs: {
         farming_system: 'Livestock & Mixed',
         land_owned_hectares: 2.2,
@@ -209,11 +209,11 @@ export function analyzeQueryProblemAndAdvise(subject: string, message: string): 
     text.includes('qualify')
   ) {
     return {
-      problemCategory: 'Cluster Modernization & Scale',
-      problemTitle: 'Cluster Progression from Subsistence (Group_4) to Mixed Commercial (Group_1)',
+      problemCategory: 'Peer Group Progression & Scale',
+      problemTitle: 'Farm Progression from Subsistence (Group_4) to Mixed Commercial (Group_1)',
       severity: 'Optimizing',
       diagnosis:
-        'K-Means clustering categorizes farms into 5 distinct socioeconomic tiers. Moving from Group_4 (Subsistence, <1 ha) or Group_3 (Smallholder) to Group_1 (Mixed Farmers) requires balancing land efficiency, controlled fertilizer usage (80–120 kg/ha), and maintaining at least 4–6 small ruminants.',
+        'Socioeconomic farm classification categorizes holdings into 5 distinct operational tiers. Moving from Group_4 (Subsistence, <1 ha) or Group_3 (Smallholder) to Group_1 (Mixed Farmers) requires balancing land efficiency, controlled fertilizer usage (80–120 kg/ha), and maintaining at least 4–6 small ruminants.',
       keyFactors: [
         'Operational land scale constraint (<2 ha) requiring vertical intensification',
         'Under-capitalization in animal assets and mechanization',
@@ -226,7 +226,7 @@ export function analyzeQueryProblemAndAdvise(subject: string, message: string): 
       ],
       modelRecommendation:
         'Use the Cluster Summary view to compare your farm attributes directly against the 5 cluster centroids.',
-      potentialImpact: 'Achieving Cluster 1 profile raises expected annual income to ₦350,000–₦750,000.',
+      potentialImpact: 'Achieving Cluster 1 profile raises expected annual income to ₹350,000–₹750,000.',
       suggestedInputs: {
         farming_system: 'Mixed Cropping',
         land_owned_hectares: 3.2,
@@ -271,7 +271,7 @@ export function analyzeQueryProblemAndAdvise(subject: string, message: string): 
         'Maintain proper row spacing (75cm x 25cm for maize) to maximize airflow and sunlight penetration, reducing fungal humidity.',
       ],
       modelRecommendation:
-        'Run the Income Prediction tool after factoring in preserved crop yield (estimated +₦75,000 saved from averted harvest loss).',
+        'Run the Income Prediction tool after factoring in preserved crop yield (estimated +₹75,000 saved from averted harvest loss).',
       potentialImpact: 'Recovers up to 35% of threatened crop biomass and halves chemical spray expenditures.',
       suggestedInputs: {
         farming_system: 'Commercial Crop Production',
@@ -347,7 +347,7 @@ export function analyzeQueryProblemAndAdvise(subject: string, message: string): 
     ],
     actionSteps: [
       'Test your farm parameters in the Income Prediction model to find the optimal fertilizer and livestock balance.',
-      'Check your farm cluster classification in Farmer Clustering to see where your holding ranks.',
+      'Check your farm peer classification in Farmer Classification to see where your holding ranks.',
       'Adopt balanced multi-cropping with legume rotations to build long-term soil resilience.',
     ],
     modelRecommendation:

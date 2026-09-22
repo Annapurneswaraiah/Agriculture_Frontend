@@ -144,7 +144,7 @@ export const PredictionHistory: React.FC<PredictionHistoryProps> = ({
             Prediction &amp; Query History
           </h1>
           <p className="text-xs sm:text-sm text-[#94A3B8] leading-relaxed">
-            Review your past machine learning regression inferences and clustering assignments with full input feature payloads and quick-export tools.
+            Review your past agricultural income forecasts and farmer classification assessments with full input feature records and quick-export tools.
           </p>
         </div>
 
@@ -199,7 +199,7 @@ export const PredictionHistory: React.FC<PredictionHistoryProps> = ({
                 : 'text-[#94A3B8] hover:text-[#F1F5F9]'
             }`}
           >
-            Farmer Clustering
+            Farmer Classification
           </button>
           <button
             id="tab-user-logins"
@@ -383,7 +383,7 @@ export const PredictionHistory: React.FC<PredictionHistoryProps> = ({
             <History className="w-12 h-12 text-[#94A3B8]/40 mx-auto mb-3" />
             <h3 className="text-base font-bold text-[#F1F5F9]">No predictions recorded yet</h3>
             <p className="text-xs text-[#94A3B8] mt-1 max-w-sm mx-auto">
-              Run an income prediction or farmer clustering analysis to populate this audit timeline.
+              Run an income prediction or farmer classification analysis to populate this audit timeline.
             </p>
             <button
               onClick={() => onNavigate('income-prediction')}
@@ -427,7 +427,7 @@ export const PredictionHistory: React.FC<PredictionHistoryProps> = ({
 
                         <div className="text-sm font-black text-[#F1F5F9] mt-0.5">
                           {isIncome
-                            ? `${formatCurrencyINR(item.resultData.predicted_income_ngn)} (${formatCurrencyNGN(item.resultData.predicted_income_ngn)})`
+                            ? formatCurrencyINR(item.resultData.predicted_income_ngn)
                             : `${item.resultData.farmer_segment || 'Group'} – ${item.resultData.segmentName || clusterInfo?.name || 'Classified'}`}
                         </div>
 

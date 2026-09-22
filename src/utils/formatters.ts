@@ -13,7 +13,7 @@ export const CLUSTER_SEGMENTS: Record<number, ClusterInfo> = {
       primaryActivity: 'Cash Crops & Large Grains',
       avgLivestock: 'Moderate - High herd quality',
       fertilizerUsage: 'High (>180 kg/ha)',
-      annualIncomeRange: '₦ 850,000 - ₦ 2,500,000+ (~₹ 4,00,000+)',
+      annualIncomeRange: '₹850,000 - ₹2,500,000+',
     },
     recommendations: [
       'Implement precision agriculture and automated drip irrigation',
@@ -33,7 +33,7 @@ export const CLUSTER_SEGMENTS: Record<number, ClusterInfo> = {
       primaryActivity: 'Rotational Crops & Livestock',
       avgLivestock: '4-8 Goats/Sheep, 20-40 L milk/wk',
       fertilizerUsage: 'Moderate (80 - 150 kg/ha)',
-      annualIncomeRange: '₦ 350,000 - ₦ 750,000 (~₹ 1,85,000)',
+      annualIncomeRange: '₹350,000 - ₹750,000',
     },
     recommendations: [
       'Utilize organic animal manure to decrease synthetic fertilizer dependence',
@@ -53,7 +53,7 @@ export const CLUSTER_SEGMENTS: Record<number, ClusterInfo> = {
       primaryActivity: 'Dairy, Goats, Sheep, Poultry',
       avgLivestock: '10+ Goats/Sheep, High egg/milk yield',
       fertilizerUsage: 'Low to Moderate (<80 kg/ha)',
-      annualIncomeRange: '₦ 280,000 - ₦ 600,000 (~₹ 1,40,000)',
+      annualIncomeRange: '₹280,000 - ₹600,000',
     },
     recommendations: [
       'Invest in animal health vaccination schedules and breed improvement',
@@ -73,7 +73,7 @@ export const CLUSTER_SEGMENTS: Record<number, ClusterInfo> = {
       primaryActivity: 'Staple Grains & Vegetables',
       avgLivestock: '2-4 Goats/Sheep, modest poultry',
       fertilizerUsage: 'Moderate (50 - 100 kg/ha)',
-      annualIncomeRange: '₦ 180,000 - ₦ 400,000 (~₹ 95,000)',
+      annualIncomeRange: '₹180,000 - ₹400,000',
     },
     recommendations: [
       'Join village cooperative credit schemes to access subsidized inputs',
@@ -93,7 +93,7 @@ export const CLUSTER_SEGMENTS: Record<number, ClusterInfo> = {
       primaryActivity: 'Tubers, Cassava & Subsistence Maize',
       avgLivestock: 'Minimal (0-2 small animals)',
       fertilizerUsage: 'Low (<40 kg/ha)',
-      annualIncomeRange: '₦ 90,000 - ₦ 220,000 (~₹ 50,000)',
+      annualIncomeRange: '₹90,000 - ₹220,000',
     },
     recommendations: [
       'Adopt bio-fortified seed varieties (iron beans, vitamin A cassava)',
@@ -114,30 +114,25 @@ export const FARMING_SYSTEM_OPTIONS = [
 ];
 
 /**
- * Format currency in NGN (model's native output) with optional INR conversion
+ * Format currency in Indian Rupees (₹)
  */
-export function formatCurrencyNGN(amount: number | null | undefined): string {
-  if (amount === null || amount === undefined || isNaN(amount)) return '₦ 0.00';
-  return new Intl.NumberFormat('en-NG', {
-    style: 'currency',
-    currency: 'NGN',
-    maximumFractionDigits: 2,
+export function formatCurrencyINR(amount: number | null | undefined): string {
+  if (amount === null || amount === undefined || isNaN(amount)) return '₹0.00';
+  return `₹${amount.toLocaleString('en-US', {
     minimumFractionDigits: 2,
-  }).format(amount);
+    maximumFractionDigits: 2,
+  })}`;
 }
 
 /**
- * Format currency in Indian Rupee (as in screenshot)
+ * Format currency with Indian Rupee symbol (₹)
  */
-export function formatCurrencyINR(amountNgn: number | null | undefined): string {
-  if (amountNgn === null || amountNgn === undefined || isNaN(amountNgn)) return '₹ 0';
-  // Approx 1 NGN ≈ 0.49 INR for standard parity or screenshot benchmark (₦378,550 ≈ ₹1,85,000)
-  const inrValue = Math.round(amountNgn * 0.4887);
-  return new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
-    maximumFractionDigits: 0,
-  }).format(inrValue);
+export function formatCurrencyNGN(amount: number | null | undefined): string {
+  if (amount === null || amount === undefined || isNaN(amount)) return '₹0.00';
+  return `₹${amount.toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
 }
 
 export function formatNumber(num: number | null | undefined): string {

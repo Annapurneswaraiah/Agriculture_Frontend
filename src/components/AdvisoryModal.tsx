@@ -230,7 +230,7 @@ export const AdvisoryModal: React.FC<AdvisoryModalProps> = ({
               }}
               className="w-full sm:w-auto px-5 py-2.5 bg-[#00FF88] hover:bg-[#00FF88]/90 text-[#0B0F14] text-xs font-black rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm shadow-[#00FF88]/20 cursor-pointer"
             >
-              <span>Apply &amp; Test in {advisory.recommendedTab === 'farmer-clustering' ? 'Farmer Clustering' : 'Income Prediction'}</span>
+              <span>Apply &amp; Test in {advisory.recommendedTab === 'farmer-clustering' ? 'Farmer Classification' : 'Income Prediction'}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           )}
