@@ -35,8 +35,56 @@ import {
   ShieldCheck,
   RefreshCw,
   Search,
-  X
+  X,
+  PieChart,
+  CircleDot
 } from 'lucide-react';
+
+// Polar to cartesian geometry converter for circular SVG charts
+function polarToCartesian(centerX: number, centerY: number, radius: number, angleInDegrees: number) {
+  const angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180.0;
+  return {
+    x: centerX + radius * Math.cos(angleInRadians),
+    y: centerY + radius * Math.sin(angleInRadians),
+  };
+}
+
+// Generate SVG path for a pie slice or donut arc
+function describeWedge(
+  x: number,
+  y: number,
+  radius: number,
+  startAngle: number,
+  endAngle: number,
+  innerRadius: number = 0
+) {
+  const diff = endAngle - startAngle;
+  const safeEndAngle = diff >= 360 ? startAngle + 359.99 : endAngle;
+  const largeArcFlag = safeEndAngle - startAngle <= 180 ? '0' : '1';
+
+  const outerStart = polarToCartesian(x, y, radius, safeEndAngle);
+  const outerEnd = polarToCartesian(x, y, radius, startAngle);
+
+  if (innerRadius <= 0) {
+    return [
+      'M', x, y,
+      'L', outerStart.x, outerStart.y,
+      'A', radius, radius, 0, largeArcFlag, 0, outerEnd.x, outerEnd.y,
+      'Z',
+    ].join(' ');
+  }
+
+  const innerStart = polarToCartesian(x, y, innerRadius, startAngle);
+  const innerEnd = polarToCartesian(x, y, innerRadius, safeEndAngle);
+
+  return [
+    'M', outerStart.x, outerStart.y,
+    'A', radius, radius, 0, largeArcFlag, 0, outerEnd.x, outerEnd.y,
+    'L', innerStart.x, innerStart.y,
+    'A', innerRadius, innerRadius, 0, largeArcFlag, 1, innerEnd.x, innerEnd.y,
+    'Z',
+  ].join(' ');
+}
 
 const WORKING_FIELD_SCENES = [
   {
@@ -102,15 +150,73 @@ export const Dashboard: React.FC<DashboardProps> = ({
   // Compute user query count
   const queryCount = Math.max(12, history.length);
 
-  // Farmer segment search filter for Dashboard overview card
+  // Farmer segment search & interactive chart states
   const [segmentSearchQuery, setSegmentSearchQuery] = useState('');
+  const [hoveredSegmentId, setHoveredSegmentId] = useState<number | null>(null);
+  const [selectedSegmentId, setSelectedSegmentId] = useState<number | null>(null);
+  const [chartViewMode, setChartViewMode] = useState<'donut' | 'pie'>('donut');
 
   const dashboardSegments = [
-    { id: 0, code: 'Group 0', name: 'Commercial Farmers', share: '28%', color: '#00FF88', desc: 'Large-scale commercial crop production' },
-    { id: 1, code: 'Group 1', name: 'Mixed Farmers', share: '22%', color: '#06B6D4', desc: 'Integrated crop & livestock farming' },
-    { id: 2, code: 'Group 2', name: 'Livestock Focused', share: '18%', color: '#8B5CF6', desc: 'Dairy, pastoral & animal husbandry' },
-    { id: 3, code: 'Group 3', name: 'Smallholder Farmers', share: '16%', color: '#F59E0B', desc: 'Family-run staple grains & vegetables' },
-    { id: 4, code: 'Group 4', name: 'Subsistence Farmers', share: '16%', color: '#EF4444', desc: 'Household food security & tubers' },
+    {
+      id: 0,
+      code: 'Group 0',
+      name: 'Commercial Farmers',
+      share: 28,
+      count: 5600,
+      color: '#00FF88',
+      desc: 'Large-scale commercial crop production',
+      land: '5.0+ ha',
+      income: '₹8.5L - ₹25L+',
+      activity: 'Cash Crops & Grains',
+    },
+    {
+      id: 1,
+      code: 'Group 1',
+      name: 'Mixed Farmers',
+      share: 22,
+      count: 4400,
+      color: '#06B6D4',
+      desc: 'Integrated crop & livestock farming',
+      land: '2.0 - 4.5 ha',
+      income: '₹3.5L - ₹7.5L',
+      activity: 'Rotational Crops & Sheep',
+    },
+    {
+      id: 2,
+      code: 'Group 2',
+      name: 'Livestock Focused',
+      share: 18,
+      count: 3600,
+      color: '#8B5CF6',
+      desc: 'Dairy, pastoral & animal husbandry',
+      land: '1.0 - 3.0 ha',
+      income: '₹2.8L - ₹6.0L',
+      activity: 'Dairy, Goats & Poultry',
+    },
+    {
+      id: 3,
+      code: 'Group 3',
+      name: 'Smallholder Farmers',
+      share: 16,
+      count: 3200,
+      color: '#F59E0B',
+      desc: 'Family-run staple grains & vegetables',
+      land: '0.8 - 2.0 ha',
+      income: '₹1.8L - ₹4.0L',
+      activity: 'Staple Grains & Pulses',
+    },
+    {
+      id: 4,
+      code: 'Group 4',
+      name: 'Subsistence Farmers',
+      share: 16,
+      count: 3200,
+      color: '#EF4444',
+      desc: 'Household food security & tubers',
+      land: '< 1.0 ha',
+      income: '₹90k - ₹2.2L',
+      activity: 'Tubers & Cassava',
+    },
   ];
 
   const filteredDashboardSegments = dashboardSegments.filter((seg) => {
@@ -120,10 +226,44 @@ export const Dashboard: React.FC<DashboardProps> = ({
       seg.name.toLowerCase().includes(q) ||
       seg.code.toLowerCase().includes(q) ||
       seg.desc.toLowerCase().includes(q) ||
+      seg.activity.toLowerCase().includes(q) ||
       `group ${seg.id}`.includes(q) ||
       `${seg.id}` === q
     );
   });
+
+  // Calculate dynamic circular arcs for SVG Pie / Donut
+  let cumulativeAngle = 0;
+  const pieSlices = dashboardSegments.map((seg) => {
+    const startAngle = cumulativeAngle;
+    const sweep = (seg.share / 100) * 360;
+    const endAngle = startAngle + sweep;
+    cumulativeAngle = endAngle;
+
+    const isMatched =
+      !segmentSearchQuery.trim() ||
+      filteredDashboardSegments.some((s) => s.id === seg.id);
+    const isHovered = hoveredSegmentId === seg.id;
+    const isSelected = selectedSegmentId === seg.id;
+    const isActive = isHovered || isSelected;
+
+    return {
+      ...seg,
+      startAngle,
+      endAngle,
+      isMatched,
+      isHovered,
+      isSelected,
+      isActive,
+    };
+  });
+
+  const activeSegment =
+    hoveredSegmentId !== null
+      ? dashboardSegments.find((s) => s.id === hoveredSegmentId)
+      : selectedSegmentId !== null
+      ? dashboardSegments.find((s) => s.id === selectedSegmentId)
+      : null;
 
   // =========================================================================
   // DASHBOARD LIVE INPUT & OUTPUT INCOME PREDICTOR
@@ -889,7 +1029,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
           </div>
         </div>
 
-        {/* Card 2: Farmer Segment Distribution Donut Chart (5 cols) */}
+        {/* Card 2: Farmer Segment Distribution Interactive Pie/Donut Chart (5 cols) */}
         <div className="lg:col-span-5 glass-card rounded-3xl p-5 border border-white/10 shadow-lg flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-2">
@@ -897,15 +1037,49 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 <Users className="w-4 h-4 text-[#00FF88]" />
                 <h3>Farmer Segment Distribution</h3>
               </div>
-              <button
-                id="dashboard-segment-details-btn"
-                onClick={() => onNavigate('cluster-summary')}
-                className="text-xs font-semibold text-[#00FF88] hover:underline cursor-pointer flex items-center gap-1"
-                title="View full peer group insights"
-              >
-                <span>Details</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
+              <div className="flex items-center space-x-2">
+                {/* View Mode Toggle: Donut vs Pie */}
+                <div className="flex items-center bg-[#111827] p-0.5 rounded-xl border border-white/10 text-[11px]">
+                  <button
+                    type="button"
+                    id="chart-view-donut-btn"
+                    onClick={() => setChartViewMode('donut')}
+                    className={`px-2 py-0.5 rounded-lg font-semibold flex items-center gap-1 transition-all cursor-pointer ${
+                      chartViewMode === 'donut'
+                        ? 'bg-[#00FF88]/20 text-[#00FF88] border border-[#00FF88]/30 shadow-xs'
+                        : 'text-[#94A3B8] hover:text-white'
+                    }`}
+                    title="Switch to Donut Chart View"
+                  >
+                    <CircleDot className="w-3 h-3" />
+                    <span>Donut</span>
+                  </button>
+                  <button
+                    type="button"
+                    id="chart-view-pie-btn"
+                    onClick={() => setChartViewMode('pie')}
+                    className={`px-2 py-0.5 rounded-lg font-semibold flex items-center gap-1 transition-all cursor-pointer ${
+                      chartViewMode === 'pie'
+                        ? 'bg-[#00FF88]/20 text-[#00FF88] border border-[#00FF88]/30 shadow-xs'
+                        : 'text-[#94A3B8] hover:text-white'
+                    }`}
+                    title="Switch to Solid Pie Chart View"
+                  >
+                    <PieChart className="w-3 h-3" />
+                    <span>Pie</span>
+                  </button>
+                </div>
+
+                <button
+                  id="dashboard-segment-details-btn"
+                  onClick={() => onNavigate('cluster-summary')}
+                  className="text-xs font-semibold text-[#00FF88] hover:underline cursor-pointer flex items-center gap-1 ml-1"
+                  title="View full peer group insights"
+                >
+                  <span>Details</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
             </div>
 
             {/* Segment Search Bar */}
@@ -933,107 +1107,137 @@ export const Dashboard: React.FC<DashboardProps> = ({
             </div>
 
             <div className="flex flex-col sm:flex-row items-center justify-between gap-5 pt-1">
-              {/* Donut Chart SVG Container with 20,000 in center */}
-              <div className="relative w-36 h-36 shrink-0 flex items-center justify-center">
-                <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="35"
-                    fill="transparent"
-                    stroke="#00FF88"
-                    strokeWidth="14"
-                    strokeDasharray="61.57 220"
-                    strokeDashoffset="0"
-                    className="transition-opacity duration-300"
-                    opacity={!segmentSearchQuery || filteredDashboardSegments.some(s => s.id === 0) ? 1 : 0.2}
-                  />
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="35"
-                    fill="transparent"
-                    stroke="#06B6D4"
-                    strokeWidth="14"
-                    strokeDasharray="48.38 220"
-                    strokeDashoffset="-61.57"
-                    className="transition-opacity duration-300"
-                    opacity={!segmentSearchQuery || filteredDashboardSegments.some(s => s.id === 1) ? 1 : 0.2}
-                  />
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="35"
-                    fill="transparent"
-                    stroke="#8B5CF6"
-                    strokeWidth="14"
-                    strokeDasharray="39.58 220"
-                    strokeDashoffset="-109.95"
-                    className="transition-opacity duration-300"
-                    opacity={!segmentSearchQuery || filteredDashboardSegments.some(s => s.id === 2) ? 1 : 0.2}
-                  />
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="35"
-                    fill="transparent"
-                    stroke="#F59E0B"
-                    strokeWidth="14"
-                    strokeDasharray="35.18 220"
-                    strokeDashoffset="-149.53"
-                    className="transition-opacity duration-300"
-                    opacity={!segmentSearchQuery || filteredDashboardSegments.some(s => s.id === 3) ? 1 : 0.2}
-                  />
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="35"
-                    fill="transparent"
-                    stroke="#EF4444"
-                    strokeWidth="14"
-                    strokeDasharray="35.18 220"
-                    strokeDashoffset="-184.71"
-                    className="transition-opacity duration-300"
-                    opacity={!segmentSearchQuery || filteredDashboardSegments.some(s => s.id === 4) ? 1 : 0.2}
-                  />
+              {/* Interactive SVG Pie / Donut Chart */}
+              <div className="relative w-40 h-40 shrink-0 flex items-center justify-center group">
+                <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible">
+                  {pieSlices.map((slice) => {
+                    const outerRadius = slice.isActive ? 48 : 45;
+                    const innerRadius = chartViewMode === 'donut' ? (slice.isActive ? 24 : 26) : 0;
+                    const pathData = describeWedge(50, 50, outerRadius, slice.startAngle, slice.endAngle, innerRadius);
+
+                    return (
+                      <path
+                        key={slice.id}
+                        id={`dashboard-pie-slice-${slice.id}`}
+                        d={pathData}
+                        fill={slice.color}
+                        stroke="#0B0F14"
+                        strokeWidth={slice.isActive ? 2 : 1.2}
+                        opacity={slice.isMatched ? 1 : 0.2}
+                        filter={slice.isActive ? `drop-shadow(0 0 6px ${slice.color})` : undefined}
+                        className="transition-all duration-200 cursor-pointer hover:brightness-110"
+                        onClick={() => setSelectedSegmentId(selectedSegmentId === slice.id ? null : slice.id)}
+                        onMouseEnter={() => setHoveredSegmentId(slice.id)}
+                        onMouseLeave={() => setHoveredSegmentId(null)}
+                      >
+                        <title>{`${slice.code} - ${slice.name}: ${slice.share}% (${slice.count.toLocaleString()} farmers)`}</title>
+                      </path>
+                    );
+                  })}
                 </svg>
 
-                {/* Center Total Text */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
-                  <span className="text-[9px] uppercase font-semibold text-[#94A3B8] tracking-wider">
-                    {filteredDashboardSegments.length === 5 ? 'Total' : 'Matches'}
-                  </span>
-                  <span className="text-sm font-black text-[#F1F5F9] leading-tight">
-                    {filteredDashboardSegments.length === 5 ? '20,000' : `${filteredDashboardSegments.length}/5`}
-                  </span>
-                </div>
+                {/* Donut Mode Center Display */}
+                {chartViewMode === 'donut' && (
+                  <div
+                    className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none transition-all duration-200"
+                    style={{ zIndex: 1 }}
+                  >
+                    {activeSegment ? (
+                      <>
+                        <span
+                          className="text-[9px] font-black uppercase tracking-wider truncate max-w-[70px]"
+                          style={{ color: activeSegment.color }}
+                        >
+                          {activeSegment.code}
+                        </span>
+                        <span className="text-base font-black text-white leading-tight">
+                          {activeSegment.share}%
+                        </span>
+                        <span className="text-[9px] text-[#94A3B8] font-mono">
+                          {activeSegment.count.toLocaleString()}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="text-[9px] uppercase font-semibold text-[#94A3B8] tracking-wider">
+                          {filteredDashboardSegments.length === 5 ? 'Total' : 'Matches'}
+                        </span>
+                        <span className="text-sm font-black text-[#F1F5F9] leading-tight">
+                          {filteredDashboardSegments.length === 5 ? '20,000' : `${filteredDashboardSegments.length}/5`}
+                        </span>
+                        <span className="text-[9px] text-[#00FF88] font-semibold">
+                          5 Cohorts
+                        </span>
+                      </>
+                    )}
+                  </div>
+                )}
+
+                {/* Solid Pie Mode Overlay Tooltip (when hovered) */}
+                {chartViewMode === 'pie' && activeSegment && (
+                  <div
+                    className="absolute -top-3 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full bg-[#111827]/95 border text-[10px] font-bold text-white shadow-lg pointer-events-none whitespace-nowrap z-10 flex items-center gap-1.5"
+                    style={{ borderColor: activeSegment.color }}
+                  >
+                    <span className="w-2 h-2 rounded-full" style={{ backgroundColor: activeSegment.color }} />
+                    <span>{activeSegment.code}: {activeSegment.share}%</span>
+                  </div>
+                )}
               </div>
 
-              {/* Legend with Segment Colors */}
+              {/* Legend with Segment Colors & Live Hover/Selection Sync */}
               <div className="space-y-1.5 text-xs w-full sm:w-auto flex-1">
                 {filteredDashboardSegments.length > 0 ? (
-                  filteredDashboardSegments.map((seg) => (
-                    <div
-                      key={seg.id}
-                      onClick={() => onNavigate('cluster-summary')}
-                      className="flex items-center justify-between gap-3 p-1.5 rounded-xl hover:bg-white/5 cursor-pointer transition-colors group"
-                      title={`Click to view ${seg.name} in Peer Groups`}
-                    >
-                      <div className="flex items-center space-x-2 truncate">
-                        <span
-                          className="w-2.5 h-2.5 rounded-full shrink-0 group-hover:scale-125 transition-transform"
-                          style={{
-                            backgroundColor: seg.color,
-                            boxShadow: `0 0 6px ${seg.color}`,
-                          }}
-                        />
-                        <span className="text-[#CBD5E1] group-hover:text-white font-medium truncate text-xs">
-                          {seg.code} &ndash; {seg.name}
-                        </span>
+                  filteredDashboardSegments.map((seg) => {
+                    const isSelected = selectedSegmentId === seg.id;
+                    const isHovered = hoveredSegmentId === seg.id;
+                    const isHighlighted = isSelected || isHovered;
+
+                    return (
+                      <div
+                        key={seg.id}
+                        id={`dashboard-legend-seg-${seg.id}`}
+                        onClick={() => setSelectedSegmentId(selectedSegmentId === seg.id ? null : seg.id)}
+                        onMouseEnter={() => setHoveredSegmentId(seg.id)}
+                        onMouseLeave={() => setHoveredSegmentId(null)}
+                        className={`flex items-center justify-between gap-3 p-1.5 rounded-xl cursor-pointer transition-all border ${
+                          isHighlighted
+                            ? 'bg-white/10 border-white/25 shadow-xs'
+                            : 'border-transparent hover:bg-white/5'
+                        }`}
+                        title={`Click to select or inspect ${seg.name}`}
+                      >
+                        <div className="flex items-center space-x-2 truncate">
+                          <span
+                            className="w-2.5 h-2.5 rounded-full shrink-0 transition-transform"
+                            style={{
+                              backgroundColor: seg.color,
+                              boxShadow: isHighlighted ? `0 0 8px ${seg.color}` : `0 0 4px ${seg.color}80`,
+                              transform: isHighlighted ? 'scale(1.3)' : 'scale(1)',
+                            }}
+                          />
+                          <span
+                            className={`truncate text-xs transition-colors ${
+                              isHighlighted ? 'text-white font-bold' : 'text-[#CBD5E1]'
+                            }`}
+                          >
+                            {seg.code} &ndash; {seg.name}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <span className="text-[10px] text-[#94A3B8] font-mono hidden sm:inline">
+                            {seg.count.toLocaleString()}
+                          </span>
+                          <span
+                            className="font-bold font-mono text-xs"
+                            style={{ color: isHighlighted ? seg.color : '#F1F5F9' }}
+                          >
+                            {seg.share}%
+                          </span>
+                        </div>
                       </div>
-                      <span className="font-bold text-[#F1F5F9] shrink-0 font-mono text-xs">{seg.share}</span>
-                    </div>
-                  ))
+                    );
+                  })
                 ) : (
                   <div className="p-3 bg-[#111827]/60 rounded-xl text-center border border-white/10 space-y-1">
                     <p className="text-xs text-[#94A3B8]">No segments match "{segmentSearchQuery}"</p>
@@ -1049,6 +1253,61 @@ export const Dashboard: React.FC<DashboardProps> = ({
               </div>
             </div>
           </div>
+
+          {/* Active Segment Detail Drawer / Callout */}
+          {activeSegment ? (
+            <div
+              className="mt-3 pt-3 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs bg-white/5 -mx-5 -mb-5 p-4 rounded-b-3xl transition-all"
+              style={{ borderTopColor: `${activeSegment.color}60` }}
+            >
+              <div className="flex items-start sm:items-center gap-2.5 min-w-0">
+                <span
+                  className="w-3 h-3 rounded-full shrink-0 mt-0.5 sm:mt-0"
+                  style={{ backgroundColor: activeSegment.color, boxShadow: `0 0 8px ${activeSegment.color}` }}
+                />
+                <div className="truncate">
+                  <div className="flex items-center gap-2">
+                    <span className="font-extrabold text-white text-xs">{activeSegment.code} &ndash; {activeSegment.name}</span>
+                    <span className="px-1.5 py-0.2 rounded text-[10px] font-mono font-bold bg-white/10 text-white">
+                      {activeSegment.share}% ({activeSegment.count.toLocaleString()} farms)
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-[#94A3B8] truncate mt-0.5">
+                    {activeSegment.activity} &bull; {activeSegment.land} &bull; <span className="text-[#00FF88] font-semibold">{activeSegment.income}</span>
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 self-end sm:self-auto shrink-0">
+                <button
+                  type="button"
+                  onClick={() => onNavigate('cluster-summary')}
+                  className="px-2.5 py-1 rounded-lg bg-[#00FF88]/20 hover:bg-[#00FF88]/30 text-[#00FF88] border border-[#00FF88]/40 text-xs font-bold transition-colors cursor-pointer flex items-center gap-1"
+                >
+                  <span>Explore Cohort</span>
+                  <ArrowRight className="w-3 h-3" />
+                </button>
+                {selectedSegmentId !== null && (
+                  <button
+                    type="button"
+                    onClick={() => setSelectedSegmentId(null)}
+                    className="p-1 rounded-lg hover:bg-white/10 text-[#94A3B8] hover:text-white transition-colors cursor-pointer"
+                    title="Clear selection"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="mt-3 pt-2.5 border-t border-white/10 flex items-center justify-between text-[11px] text-[#94A3B8]">
+              <span className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#00FF88]" />
+                <span>Hover or click any pie slice or legend row to inspect</span>
+              </span>
+              <span className="font-mono text-[10px]">20,000 Records</span>
+            </div>
+          )}
         </div>
 
         {/* Card 3: Recent Activity (4 cols) */}
