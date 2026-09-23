@@ -11,6 +11,7 @@ import { IncomePrediction } from './pages/IncomePrediction';
 import { FarmerClustering } from './pages/FarmerClustering';
 import { ClusterSummary } from './pages/ClusterSummary';
 import { PredictionHistory } from './pages/PredictionHistory';
+import { Profile } from './pages/Profile';
 import { ContactModal } from './components/ContactModal';
 import { AuthModal } from './components/AuthModal';
 import { LegalModal } from './components/LegalModal';
@@ -37,16 +38,31 @@ function AppContent() {
     type: 'privacy',
   });
 
-  const [user, setUser] = useState<UserProfile | null>({
-    name: 'Agricultural Specialist',
-    role: 'Agricultural Specialist',
-    email: 'agri.specialist@verdant.org',
-    phone: '+234 801 234 5678',
-    location: 'Kaduna Agricultural Basin',
-    farmSizeHectares: 4.5,
-    farmingSystem: 'Commercial Crop Production',
-    memberSince: 'January 2026',
-    avatarInitials: 'AS',
+  // Persistent user state: loads from localStorage if present
+  const [user, setUser] = useState<UserProfile | null>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const sessionStatus = localStorage.getItem('agri_ai_session_status');
+        if (sessionStatus === 'logged_out') {
+          return null;
+        }
+        const stored = localStorage.getItem('agri_ai_current_user');
+        if (stored) {
+          return JSON.parse(stored);
+        }
+      } catch {}
+    }
+    return {
+      name: 'Dr. Ibrahim Alabi',
+      role: 'Agricultural Specialist',
+      email: 'ibrahim.alabi@agriai.org',
+      phone: '+234 803 456 7890',
+      location: 'Kaduna Agricultural Basin',
+      farmSizeHectares: 4.5,
+      farmingSystem: 'Commercial Crop Production',
+      memberSince: 'January 2026',
+      avatarInitials: 'IA',
+    };
   });
 
   const [history, setHistory] = useState<PredictionHistoryItem[]>(() => getPredictionHistory());
@@ -66,6 +82,31 @@ function AppContent() {
     });
   }, []);
 
+  const handleLoginSuccess = (loggedInUser: UserProfile) => {
+    setUser(loggedInUser);
+    try {
+      localStorage.setItem('agri_ai_session_status', 'logged_in');
+      localStorage.setItem('agri_ai_current_user', JSON.stringify(loggedInUser));
+    } catch {}
+    setAuthModal((prev) => ({ ...prev, isOpen: false }));
+    // Once user logs in, show their profile immediately
+    navigate('/profile');
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    try {
+      localStorage.setItem('agri_ai_session_status', 'logged_out');
+      localStorage.removeItem('agri_ai_current_user');
+    } catch {}
+  };
+
+  const handleUpdateUser = (updated: UserProfile) => {
+    setUser(updated);
+    try {
+      localStorage.setItem('agri_ai_current_user', JSON.stringify(updated));
+    } catch {}
+  };
 
   const handleClearHistory = () => {
     clearPredictionHistory();
@@ -92,6 +133,10 @@ function AppContent() {
       case 'history':
         navigate('/history');
         break;
+      case 'profile':
+      case 'user-profile':
+        navigate('/profile');
+        break;
       case 'home':
         navigate('/');
         break;
@@ -113,6 +158,7 @@ function AppContent() {
     '/cluster-summary',
     '/history',
     '/prediction-history',
+    '/profile',
   ].some((path) => location.pathname.startsWith(path));
 
   const isDashboardOnly = location.pathname === '/dashboard';
@@ -124,9 +170,11 @@ function AppContent() {
 
       {/* Global Navigation */}
       <Navbar
+        user={user}
         onOpenContact={() => setContactOpen(true)}
         onOpenSignIn={() => setAuthModal({ isOpen: true, mode: 'signin' })}
         onOpenGetStarted={() => navigate('/dashboard')}
+        onLogout={handleLogout}
       />
 
       {/* Main Content View with React Router */}
@@ -144,7 +192,18 @@ function AppContent() {
                 apiStatus={apiStatus}
                 onOpenLogin={() => setAuthModal({ isOpen: true, mode: 'signin' })}
                 onOpenContact={() => setContactOpen(true)}
-                onLogout={() => setUser(null)}
+                onLogout={handleLogout}
+              />
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <Profile
+                user={user}
+                onUpdateUser={handleUpdateUser}
+                onOpenLogin={() => setAuthModal({ isOpen: true, mode: 'signin' })}
+                onLogout={handleLogout}
               />
             }
           />
@@ -217,6 +276,7 @@ function AppContent() {
         isOpen={authModal.isOpen}
         initialMode={authModal.mode}
         onClose={() => setAuthModal({ ...authModal, isOpen: false })}
+        onLoginSuccess={handleLoginSuccess}
       />
 
       <LegalModal
@@ -235,4 +295,3 @@ export default function App() {
     </BrowserRouter>
   );
 }
-

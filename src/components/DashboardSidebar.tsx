@@ -15,7 +15,8 @@ import {
   ChevronRight,
   ChevronLeft,
   PanelLeftClose,
-  PanelLeftOpen
+  PanelLeftOpen,
+  User
 } from 'lucide-react';
 import { UserProfile } from '../types';
 
@@ -40,17 +41,9 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
   const [isExtended, setIsExtended] = useState(true);
   // Mobile drawer state
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
-  // Logout confirm modal state
-  const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
 
   const handleAction = (action: () => void) => {
     action();
-    setMobileSidebarOpen(false);
-  };
-
-  const handleConfirmLogout = () => {
-    onLogout();
-    setLogoutConfirmOpen(false);
     setMobileSidebarOpen(false);
   };
 
@@ -274,6 +267,29 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
                 <span className="flex-1 text-left">Prediction History</span>
               )}
             </button>
+
+            {/* 👤 My Profile */}
+            <button
+              type="button"
+              id="sidebar-link-profile"
+              onClick={() => handleAction(() => onNavigate('profile'))}
+              title="Farmer Profile & Settings"
+              className={`w-full flex items-center gap-3 rounded-xl text-xs font-semibold text-[#F4F8F4] hover:text-[#42F58D] hover:bg-[#12241A] transition-all cursor-pointer group ${
+                extended ? 'px-3 py-2.5' : 'p-2.5 justify-center'
+              } ${
+                activeSection === 'profile'
+                  ? 'bg-[#42F58D]/15 text-[#42F58D] border border-[#42F58D]/30 shadow-none'
+                  : ''
+              }`}
+            >
+              <User className="w-4 h-4 text-[#86D957] group-hover:scale-110 transition-transform shrink-0" />
+              {extended && (
+                <>
+                  <span className="flex-1 text-left">My Profile</span>
+                  <ChevronRight className="w-3.5 h-3.5 text-[#A0B4A5]/40 group-hover:translate-x-0.5 transition-transform" />
+                </>
+              )}
+            </button>
           </div>
 
           {/* Section 3: Inquiries & Support */}
@@ -310,24 +326,30 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
           {/* User Profile Card */}
           {user ? (
             extended ? (
-              <div className="p-3 rounded-2xl bg-[#12241A] border border-[#42F58D]/15">
+              <div
+                onClick={() => handleAction(() => onNavigate('profile'))}
+                className="p-3 rounded-2xl bg-[#12241A] border border-[#42F58D]/15 hover:border-[#42F58D]/40 transition-all cursor-pointer group"
+                title="View & Edit Profile"
+              >
                 <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-full bg-[#42F58D]/20 border border-[#42F58D]/40 flex items-center justify-center text-xs font-black text-[#42F58D] shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-[#42F58D]/20 border border-[#42F58D]/40 flex items-center justify-center text-xs font-black text-[#42F58D] shrink-0 group-hover:scale-105 transition-transform">
                     {user.avatarInitials || 'AS'}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-xs font-bold text-[#F4F8F4] truncate">{user.name}</div>
+                    <div className="text-xs font-bold text-[#F4F8F4] group-hover:text-[#42F58D] transition-colors truncate">{user.name}</div>
                     <div className="text-[10px] text-[#42F58D] flex items-center gap-1">
                       <span className="w-1.5 h-1.5 rounded-full bg-[#42F58D] animate-pulse" />
                       <span className="truncate">{user.role}</span>
                     </div>
                   </div>
+                  <ChevronRight className="w-3.5 h-3.5 text-[#A0B4A5]/40 group-hover:text-[#42F58D] group-hover:translate-x-0.5 transition-transform" />
                 </div>
               </div>
             ) : (
               <div
-                className="w-10 h-10 mx-auto rounded-full bg-[#42F58D]/20 border border-[#42F58D]/40 flex items-center justify-center text-xs font-black text-[#42F58D] relative cursor-pointer"
-                title={`${user.name} (${user.role})`}
+                onClick={() => handleAction(() => onNavigate('profile'))}
+                className="w-10 h-10 mx-auto rounded-full bg-[#42F58D]/20 border border-[#42F58D]/40 flex items-center justify-center text-xs font-black text-[#42F58D] relative cursor-pointer hover:scale-105 transition-transform"
+                title={`${user.name} (${user.role}) - Click to view profile`}
               >
                 {user.avatarInitials || 'AS'}
                 <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-[#42F58D] border-2 border-[#07110C]" />
@@ -354,7 +376,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
             <button
               type="button"
               id="sidebar-link-logout"
-              onClick={() => setLogoutConfirmOpen(true)}
+              onClick={() => handleAction(onLogout)}
               title="Logout session"
               className={`w-full flex items-center rounded-xl text-xs font-bold bg-red-950/30 hover:bg-red-900/50 border border-red-500/20 text-red-300 hover:text-red-200 transition-all cursor-pointer ${
                 extended ? 'justify-center gap-2 px-3 py-2' : 'p-2.5 justify-center'
@@ -392,37 +414,6 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
             </button>
           )}
         </div>
-
-        {/* Logout Confirmation Dialog */}
-        {logoutConfirmOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs animate-in fade-in duration-150">
-            <div className="bg-[#12241A] border border-[#42F58D]/25 rounded-2xl p-5 max-w-xs w-full space-y-4 shadow-none">
-              <div className="flex items-center gap-3 text-red-400">
-                <LogOut className="w-5 h-5" />
-                <h3 className="text-sm font-bold text-[#F4F8F4]">Confirm Logout</h3>
-              </div>
-              <p className="text-xs text-[#A0B4A5]">
-                Are you sure you want to end your current active dashboard session?
-              </p>
-              <div className="flex items-center justify-end gap-2 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setLogoutConfirmOpen(false)}
-                  className="px-3 py-1.5 rounded-lg text-xs font-semibold text-[#A0B4A5] hover:bg-[#0D1B13] cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  onClick={handleConfirmLogout}
-                  className="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-red-600 hover:bg-red-500 text-white shadow-none cursor-pointer"
-                >
-                  Logout
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     );
   };

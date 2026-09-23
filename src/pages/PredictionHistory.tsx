@@ -71,12 +71,10 @@ export const PredictionHistory: React.FC<PredictionHistoryProps> = ({
   };
 
   const handleClearLogins = () => {
-    if (window.confirm('Are you sure you want to clear your user login history?')) {
-      clearLoginHistory();
-      setLoginHistory([]);
-      setLoginActionNotice('User login history cleared.');
-      setTimeout(() => setLoginActionNotice(null), 3000);
-    }
+    clearLoginHistory();
+    setLoginHistory([]);
+    setLoginActionNotice('User login history cleared.');
+    setTimeout(() => setLoginActionNotice(null), 3000);
   };
 
   const handleExportLogins = () => {

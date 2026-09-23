@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Sprout, Mail, MapPin, Globe, Compass, Share2 } from 'lucide-react';
+import { Sprout, Mail, MapPin, Globe, Compass, Radio, Shield, Phone } from 'lucide-react';
 
 interface FooterProps {
   onOpenContact: () => void;
@@ -14,142 +14,147 @@ export const Footer: React.FC<FooterProps> = ({
   onOpenTerms,
 }) => {
   return (
-    <footer className="bg-[#0D1B13] text-[#F4F8F4] border-t border-[#42F58D]/15 pt-16 pb-12">
+    <footer className="bg-[#030712] text-[#F1F5F9] border-t border-white/10 pt-16 pb-12 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-[#42F58D]/15">
-          {/* Brand Column */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-white/10">
+          {/* Brand Column (2 cols) */}
           <div className="lg:col-span-2 space-y-4">
             <Link to="/" className="flex items-center gap-3 group focus:outline-hidden">
-              <div className="w-10 h-10 rounded-xl bg-[#42F58D]/15 border border-[#42F58D]/30 text-[#42F58D] flex items-center justify-center shadow-none group-hover:bg-[#42F58D] group-hover:text-[#07110C] transition-colors">
+              <div className="w-10 h-10 rounded-xl bg-[#00FF88]/15 border border-[#00FF88]/30 text-[#00FF88] flex items-center justify-center transition-colors group-hover:bg-[#00FF88] group-hover:text-[#030712]">
                 <Sprout className="w-6 h-6" />
               </div>
               <div>
-                <span className="text-xl font-black tracking-tight text-[#F4F8F4]">
-                  AgriAI
+                <span className="font-display font-black text-xl tracking-tight text-white">
+                  Agri<span className="text-[#00FF88]">AI</span>
                 </span>
-                <p className="text-[10px] font-semibold text-[#86D957] uppercase tracking-wider -mt-0.5">
-                  Precision Telemetry Platform
+                <p className="text-[10px] font-mono font-semibold text-[#00FF88] uppercase tracking-wider -mt-0.5">
+                  Smart Farming Intelligence
                 </p>
               </div>
             </Link>
 
-            <p className="text-xs sm:text-sm text-[#A0B4A5] leading-relaxed max-w-sm">
-              Empowering farmers, agricultural learners, and rural communities through accessible agricultural knowledge, sustainable farming practices, and data-informed understanding.
+            <p className="text-xs sm:text-sm text-[#94A3B8] leading-relaxed max-w-sm">
+              Combining satellite imagery, autonomous multispectral drone monitoring, and machine
+              learning to help growers, agronomists, and farm enterprises make faster, smarter field
+              decisions.
             </p>
 
-            <div className="pt-2 flex items-center gap-3">
-              {/* Telemetry network indicators */}
-              <div
-                title="Agricultural Knowledge Network"
-                className="w-8 h-8 rounded-lg bg-[#12241A] border border-[#42F58D]/15 text-[#42F58D] flex items-center justify-center hover:bg-[#42F58D]/20 transition-colors cursor-default"
-              >
-                <Globe className="w-4 h-4" />
+            <div className="space-y-1.5 text-xs text-[#CBD5E1] pt-2 font-mono">
+              <div className="flex items-center gap-2">
+                <MapPin className="w-3.5 h-3.5 text-[#00FF88]" />
+                <span>Agronomy Intelligence Basin, Sector 7A</span>
               </div>
-              <div
-                title="Farmer Extension Network"
-                className="w-8 h-8 rounded-lg bg-[#12241A] border border-[#42F58D]/15 text-[#42F58D] flex items-center justify-center hover:bg-[#42F58D]/20 transition-colors cursor-default"
-              >
-                <Compass className="w-4 h-4" />
+              <div className="flex items-center gap-2">
+                <Mail className="w-3.5 h-3.5 text-[#00FF88]" />
+                <span>intelligence@agriai.org</span>
               </div>
-              <div
-                title="Community Outreach"
-                className="w-8 h-8 rounded-lg bg-[#12241A] border border-[#42F58D]/15 text-[#42F58D] flex items-center justify-center hover:bg-[#42F58D]/20 transition-colors cursor-default"
-              >
-                <Share2 className="w-4 h-4" />
+              <div className="flex items-center gap-2">
+                <Phone className="w-3.5 h-3.5 text-[#00FF88]" />
+                <span>+1 (800) 459-AGRI</span>
               </div>
             </div>
           </div>
 
-          {/* Quick Navigation */}
+          {/* Quick Navigation Links */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold text-[#F4F8F4] uppercase tracking-wider">
-              Navigation
+            <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono">
+              Platform &amp; Tools
             </h4>
-            <ul className="space-y-2 text-xs sm:text-sm">
+            <ul className="space-y-2 text-xs">
               <li>
-                <Link
-                  to="/"
-                  className="text-[#A0B4A5] hover:text-[#42F58D] transition-colors block py-1"
-                >
-                  Home
+                <Link to="/" className="text-[#94A3B8] hover:text-[#00FF88] transition-colors block py-0.5">
+                  Home Overview
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/about"
-                  className="text-[#A0B4A5] hover:text-[#42F58D] transition-colors block py-1"
-                >
-                  About
+                <Link to="/dashboard" className="text-[#94A3B8] hover:text-[#00FF88] transition-colors block py-0.5">
+                  Operations Dashboard
                 </Link>
               </li>
               <li>
-                <button
-                  type="button"
-                  onClick={onOpenContact}
-                  className="text-[#A0B4A5] hover:text-[#42F58D] transition-colors block py-1 cursor-pointer"
-                >
-                  Contact
-                </button>
+                <Link to="/income-prediction" className="text-[#94A3B8] hover:text-[#00FF88] transition-colors block py-0.5">
+                  Income Prediction ML
+                </Link>
+              </li>
+              <li>
+                <Link to="/farmer-clustering" className="text-[#94A3B8] hover:text-[#00FF88] transition-colors block py-0.5">
+                  Peer Group Clustering
+                </Link>
+              </li>
+              <li>
+                <Link to="/cluster-summary" className="text-[#94A3B8] hover:text-[#00FF88] transition-colors block py-0.5">
+                  Segment Summary
+                </Link>
               </li>
             </ul>
           </div>
 
-          {/* Topics & Understanding */}
+          {/* Agronomy Solutions */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold text-[#F4F8F4] uppercase tracking-wider">
-              Agricultural Domains
+            <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono">
+              Intelligence Solutions
             </h4>
-            <ul className="space-y-2 text-xs text-[#A0B4A5]">
-              <li>Crop &amp; Soil Cultivation</li>
-              <li>Farming Systems &amp; Livelihoods</li>
-              <li>Livestock Stewardship</li>
-              <li>Water &amp; Resource Efficiency</li>
-              <li>Data-Informed Insights</li>
+            <ul className="space-y-2 text-xs text-[#94A3B8]">
+              <li>Autonomous Drone Telemetry</li>
+              <li>Multispectral 6-Band NDVI</li>
+              <li>NDRE Chlorophyll Profiling</li>
+              <li>Root-Zone Hydric Moisture</li>
+              <li>Variable-Rate Prescription ISOXML</li>
+              <li>Pre-Symptomatic Blight Alert</li>
             </ul>
           </div>
 
-          {/* Legal & Policies */}
+          {/* Legal & Governance */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold text-[#F4F8F4] uppercase tracking-wider">
-              Platform &amp; Legal
+            <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono">
+              Security &amp; Legal
             </h4>
-            <ul className="space-y-2 text-xs sm:text-sm">
+            <ul className="space-y-2 text-xs">
               <li>
                 <button
                   type="button"
                   onClick={onOpenPrivacy}
-                  className="text-[#A0B4A5] hover:text-[#42F58D] transition-colors block py-1 cursor-pointer"
+                  className="text-[#94A3B8] hover:text-[#00FF88] transition-colors block py-0.5 cursor-pointer"
                 >
-                  Privacy Policy
+                  Privacy &amp; Telemetry Policy
                 </button>
               </li>
               <li>
                 <button
                   type="button"
                   onClick={onOpenTerms}
-                  className="text-[#A0B4A5] hover:text-[#42F58D] transition-colors block py-1 cursor-pointer"
+                  className="text-[#94A3B8] hover:text-[#00FF88] transition-colors block py-0.5 cursor-pointer"
                 >
-                  Terms &amp; Conditions
+                  Terms of Service
                 </button>
               </li>
               <li>
-                <div className="text-xs text-[#42F58D] flex items-center gap-1.5 pt-1">
-                  <Mail className="w-3.5 h-3.5" />
-                  <span>support@agriai.org</span>
-                </div>
+                <button
+                  type="button"
+                  onClick={onOpenContact}
+                  className="text-[#94A3B8] hover:text-[#00FF88] transition-colors block py-0.5 cursor-pointer"
+                >
+                  Contact Agronomy Desk
+                </button>
+              </li>
+              <li className="pt-2 text-[11px] text-[#00FF88] font-mono flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[#00FF88] animate-pulse" />
+                <span>Flight Engine: Active 100%</span>
               </li>
             </ul>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#A0B4A5]">
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#94A3B8]">
           <p>
-            &copy; 2026 AgriAI. Dedicated to farmer empowerment and agricultural understanding.
+            &copy; 2026 AgriAI — Smart Farming Intelligence. All rights reserved.
           </p>
-          <p className="text-right">
-            Designed for farmers, agricultural students, and rural communities.
-          </p>
+          <div className="flex items-center gap-4 text-xs font-mono">
+            <span>ISO 27001 Certified</span>
+            <span>&bull;</span>
+            <span>RTK Sub-inch Accuracy</span>
+          </div>
         </div>
       </div>
     </footer>

@@ -1,92 +1,125 @@
 @import "tailwindcss";
 
 /* ==========================================================================
-   DEEP FOREST GREEN PRECISION TELEMETRY DESIGN SYSTEM
-   Primary Canvas: #07110C (Deep forest midnight base)
-   Secondary Surface: #0D1B13 (Dark moss surface)
-   Elevated Cards: #12241A (Deep pine card background)
-   Dividers & Borders: rgba(66, 245, 141, 0.15)
-   Primary Accent: #42F58D (Vibrant electric neon spring green)
-   Secondary Accent: #86D957 (Fresh foliage lime green)
-   Text Primary: #F4F8F4 (Mint white)
-   Text Secondary: #A0B4A5 (Sage gray)
+   AGRIAI — SMART FARMING INTELLIGENCE DESIGN SYSTEM
+   Dark emerald (#022c22, #064e3b), deep navy (#0a1128, #0b1329), black (#030712),
+   and neon electric green (#00FF88, #42F58D)
    ========================================================================== */
 
 :root {
-  --color-canvas: #07110C;
-  --color-surface: #0D1B13;
-  --color-card: #12241A;
-  --color-well: #09160F;
-  --color-border-subtle: rgba(66, 245, 141, 0.15);
-  --color-accent-primary: #42F58D;
-  --color-accent-secondary: #86D957;
-  --color-text-primary: #F4F8F4;
-  --color-text-secondary: #A0B4A5;
+  --color-canvas: #030712;
+  --color-surface: #07110C;
+  --color-card: #0c1712;
+  --color-accent-neon: #00FF88;
+  --color-accent-spring: #42F58D;
+  --color-accent-cyan: #06B6D4;
 }
 
 html {
   scroll-behavior: smooth;
-  background-color: #07110C;
+  background-color: #030712;
 }
 
 body {
-  background-color: #07110C;
-  color: #F4F8F4;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: #030712;
+  color: #F1F5F9;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
   line-height: 1.6;
 }
 
-/* Elevated Card styling with mathematical depth hierarchy and 1px neon borders */
-.agri-card {
-  background: #12241A;
-  border: 1px solid rgba(66, 245, 141, 0.15);
-  border-radius: 1rem;
-  box-shadow: none;
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+.font-display {
+  font-family: 'Syne', sans-serif;
 }
 
-.agri-card:hover {
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Glassmorphic Cards & Elevated Surfaces */
+.glass-panel {
+  background: rgba(12, 23, 18, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 255, 136, 0.12);
+}
+
+.glass-panel-hover {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-panel-hover:hover {
+  background: rgba(16, 32, 24, 0.85);
+  border-color: rgba(0, 255, 136, 0.35);
   transform: translateY(-2px);
-  border-color: rgba(66, 245, 141, 0.35);
+  box-shadow: 0 10px 30px -10px rgba(0, 255, 136, 0.12);
 }
 
-.glass-card {
-  background: #12241A;
-  border: 1px solid rgba(66, 245, 141, 0.15);
-  border-radius: 1rem;
-  box-shadow: none;
+/* Field Grid Backgrounds */
+.field-grid-pattern {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(0, 255, 136, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 255, 136, 0.05) 1px, transparent 1px);
 }
 
-.field-card-glow {
-  background: #0D1B13;
-  border: 1px solid rgba(66, 245, 141, 0.15);
-  transition: border-color 0.2s ease;
+.terrain-contour-pattern {
+  background-size: 80px 80px;
+  background-image: 
+    radial-gradient(ellipse at center, rgba(0, 255, 136, 0.08) 0%, transparent 70%);
 }
 
-.field-card-glow:hover,
-.field-card-glow:focus-within {
-  border-color: rgba(66, 245, 141, 0.35);
+/* Scan Wave Pulse */
+@keyframes scan-wave-pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+.animate-scan-wave {
+  animation: scan-wave-pulse 2.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+/* Laser Scan Sweep */
+@keyframes laser-sweep {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 200% 0%;
+  }
+}
+
+.laser-glow {
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.4), 0 0 40px rgba(0, 255, 136, 0.2);
 }
 
 /* Clean precision scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #07110C;
+  background: #030712;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #12241A;
-  border: 1px solid rgba(66, 245, 141, 0.2);
+  background: #111e17;
+  border: 1px solid rgba(0, 255, 136, 0.2);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #42F58D;
+  background: #00FF88;
 }
 
 

@@ -411,9 +411,14 @@ export const Dashboard: React.FC<DashboardProps> = ({
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8 md:gap-10 lg:gap-14">
           {/* Left Section: Welcome back + Eco Slogan */}
           <div className="flex-1 flex flex-col justify-center text-center md:text-left max-w-xl">
-            <div className="inline-flex items-center self-center md:self-start space-x-2 px-3 py-1 rounded-full bg-[#00FF88]/15 border border-[#00FF88]/30 text-[#00FF88] text-xs font-bold mb-3 shadow-xs">
-              <Sparkles className="w-3.5 h-3.5" />
+            <div
+              onClick={() => onNavigate('profile')}
+              className="inline-flex items-center self-center md:self-start space-x-2 px-3 py-1 rounded-full bg-[#00FF88]/15 hover:bg-[#00FF88]/25 border border-[#00FF88]/30 hover:border-[#00FF88]/50 text-[#00FF88] text-xs font-bold mb-3 shadow-xs cursor-pointer transition-all group"
+              title="Click to view and edit your profile"
+            >
+              <Sparkles className="w-3.5 h-3.5 group-hover:rotate-12 transition-transform" />
               <span>Welcome back, {user?.name || 'Farmer Partner'}!</span>
+              <span className="text-[10px] text-white/60 font-normal ml-1 underline group-hover:text-white">View Profile &rarr;</span>
             </div>
 
             <h1 className="font-serif italic font-normal text-2xl sm:text-3xl md:text-4xl lg:text-[40px] text-[#F1F5F9] leading-snug tracking-tight">

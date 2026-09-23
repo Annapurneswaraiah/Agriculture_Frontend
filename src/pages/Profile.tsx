@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   User,
   MapPin,
@@ -6,6 +7,7 @@ import {
   Save,
   CheckCircle2,
   LogIn,
+  LogOut,
   Layers,
   Sprout,
   ShieldCheck,
@@ -36,9 +38,11 @@ interface ProfileProps {
   user: UserProfile | null;
   onUpdateUser: (updated: UserProfile) => void;
   onOpenLogin: () => void;
+  onLogout?: () => void;
 }
 
-export const Profile: React.FC<ProfileProps> = ({ user, onUpdateUser, onOpenLogin }) => {
+export const Profile: React.FC<ProfileProps> = ({ user, onUpdateUser, onOpenLogin, onLogout }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<UserProfile | null>(user);
   const [saved, setSaved] = useState(false);
   const [loginHistory, setLoginHistory] = useState<UserLoginHistoryItem[]>(() => getLoginHistory(user));
@@ -80,12 +84,10 @@ export const Profile: React.FC<ProfileProps> = ({ user, onUpdateUser, onOpenLogi
   };
 
   const handleClearHistory = () => {
-    if (window.confirm('Are you sure you want to clear your login history?')) {
-      clearLoginHistory();
-      setLoginHistory([]);
-      setHistoryNotice('User login history cleared.');
-      setTimeout(() => setHistoryNotice(null), 3000);
-    }
+    clearLoginHistory();
+    setLoginHistory([]);
+    setHistoryNotice('User login history cleared.');
+    setTimeout(() => setHistoryNotice(null), 3000);
   };
 
   const handleExportHistory = () => {
@@ -108,13 +110,24 @@ export const Profile: React.FC<ProfileProps> = ({ user, onUpdateUser, onOpenLogi
             You are currently logged out. Sign in to customize your agricultural profile, farm acreage, model precision thresholds, and personal preferences.
           </p>
         </div>
-        <div className="pt-2">
+        <div className="pt-3 flex flex-wrap items-center justify-center gap-3">
           <button
+            type="button"
+            id="signed-out-signin-btn"
             onClick={onOpenLogin}
             className="px-6 py-2.5 bg-[#00FF88] hover:bg-[#00FF88]/90 text-[#0B0F14] text-xs font-black rounded-xl transition-all inline-flex items-center space-x-2 shadow-sm shadow-[#00FF88]/20 cursor-pointer"
           >
             <LogIn className="w-4 h-4" />
             <span>Sign In / Register</span>
+          </button>
+          <button
+            type="button"
+            id="signed-out-dashboard-btn"
+            onClick={() => navigate('/dashboard')}
+            className="px-5 py-2.5 bg-white/10 hover:bg-white/20 text-[#F1F5F9] text-xs font-bold rounded-xl transition-all inline-flex items-center space-x-2 border border-white/10 cursor-pointer"
+          >
+            <Sprout className="w-4 h-4 text-[#00FF88]" />
+            <span>Go to Dashboard</span>
           </button>
         </div>
       </motion.div>
@@ -152,9 +165,33 @@ export const Profile: React.FC<ProfileProps> = ({ user, onUpdateUser, onOpenLogi
               <h1 className="text-2xl font-black text-[#F1F5F9]">{formData.name}</h1>
               <p className="text-xs font-semibold text-[#00FF88]">{formData.role}</p>
             </div>
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#00FF88]/15 text-[#00FF88] border border-[#00FF88]/30">
-              Verified Farmer Account
-            </span>
+            <div className="flex items-center gap-2 self-center sm:self-auto">
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#00FF88]/15 text-[#00FF88] border border-[#00FF88]/30">
+                Verified Farmer Account
+              </span>
+              <button
+                type="button"
+                id="profile-switch-account-btn"
+                onClick={onOpenLogin}
+                className="px-2.5 py-1 rounded-xl text-xs font-semibold bg-white/10 hover:bg-white/20 text-[#F1F5F9] transition-colors cursor-pointer flex items-center gap-1.5"
+                title="Switch Account or Sign In with another profile"
+              >
+                <LogIn className="w-3.5 h-3.5 text-[#00FF88]" />
+                <span className="hidden sm:inline">Switch</span>
+              </button>
+              {onLogout && (
+                <button
+                  type="button"
+                  id="profile-logout-btn"
+                  onClick={onLogout}
+                  className="px-2.5 py-1 rounded-xl text-xs font-semibold bg-red-950/40 hover:bg-red-900/60 text-red-300 border border-red-500/20 transition-colors cursor-pointer flex items-center gap-1.5"
+                  title="Sign out of current profile"
+                >
+                  <LogOut className="w-3.5 h-3.5 text-red-400" />
+                  <span className="hidden sm:inline">Logout</span>
+                </button>
+              )}
+            </div>
           </div>
 
           <p className="text-xs text-[#94A3B8] pt-1 flex flex-wrap items-center justify-center sm:justify-start gap-4">
